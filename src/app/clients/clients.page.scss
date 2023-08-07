@@ -1,0 +1,44 @@
+.content-background {
+  --background: linear-gradient(to bottom, white, #f2f2f2);
+}
+
+ion-toolbar {
+  --border-width: 0;
+  --background: linear-gradient(to bottom, white, #f0f0f0);
+}
+
+// ion-item {
+//   --border-color: #d9d9d9;
+//   --border-width: 0 0 1px 0;
+// }
+
+// .client-item {
+//   --background: white;
+//   margin: 8px;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow without border */
+// }
+
+// ion-item-option {
+//   --color: white;
+//   --min-width: 64px;
+//   --max-height: 64px;
+//   font-size: 16px;
+// }
+
+// ion-item-option[color="danger"] {
+//   --background: #a63534; /* Adjust to your specific shade */
+// }
+
+// ion-item-option[color="medium"] {
+//   --background: gray;
+// }
+
+// ion-button {
+//   --color: #a63534; /* Adjust to your specific shade */
+// }
+
+// hot rod red: #A63534
+
+ion-card {
+  width: 100%;
+}
