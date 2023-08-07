@@ -1,0 +1,22 @@
+.content-background {
+  --background: linear-gradient(to bottom, white, #f2f2f2);
+}
+
+ion-toolbar {
+  --border-width: 0;
+  --background: linear-gradient(to bottom, white, #f0f0f0);
+}
+
+ion-card {
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ion-item {
+  --padding-end: 0;
+}
+
+ion-button {
+  --color: #808080; // Subtle gray color for the ellipsis button
+}
