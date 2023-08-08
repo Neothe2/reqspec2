@@ -5,12 +5,14 @@ import { AddEditClientModalComponent } from './add-edit-client-modal/add-edit-cl
 import { ReactiveFormsModule } from '@angular/forms';
 import { AddEditProjectModalComponent } from './add-edit-project-modal/add-edit-project-modal.component';
 import { AddEditActorModalComponent } from './add-edit-actor-modal/add-edit-actor-modal.component';
+import { AddEditStaffModalComponent } from './add-edit-staff-modal/add-edit-staff-modal.component';
 
 @NgModule({
   declarations: [
     AddEditClientModalComponent,
     AddEditProjectModalComponent,
     AddEditActorModalComponent,
+    AddEditStaffModalComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })

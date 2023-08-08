@@ -8,6 +8,13 @@ const routes: Routes = [
     path: ':projectId',
     component: ProjectDetailsPage,
   },
+  {
+    path: ':projectId/actor-details',
+    loadChildren: () =>
+      import('./actor-details/actor-details.module').then(
+        (m) => m.ActorDetailsPageModule
+      ),
+  },
 ];
 
 @NgModule({

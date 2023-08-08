@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Staff</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+      <!-- <ion-item>
+        <ion-label position="floating">Staff Name</ion-label>
+        <ion-input formControlName="name" type="text"></ion-input>
+      </ion-item> -->
+      <ion-item>
+        <ion-label position="floating">Staff Role</ion-label>
+        <ion-input formControlName="role" type="text"></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" expand="block">Confirm</ion-button>
+    </form>
+  </ion-list>
+</ion-content>
