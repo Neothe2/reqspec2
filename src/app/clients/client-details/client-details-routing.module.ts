@@ -5,6 +5,13 @@ import { ClientDetailsPage } from './client-details.page';
 
 const routes: Routes = [
   {
+    path: ':id/project-details',
+    loadChildren: () =>
+      import('./project-details/project-details.module').then(
+        (m) => m.ProjectDetailsPageModule
+      ),
+  },
+  {
     path: ':id',
     component: ClientDetailsPage,
   },
