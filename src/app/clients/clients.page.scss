@@ -12,12 +12,6 @@ ion-toolbar {
 //   --border-width: 0 0 1px 0;
 // }
 
-// .client-item {
-//   --background: white;
-//   margin: 8px;
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow without border */
-// }
-
 // ion-item-option {
 //   --color: white;
 //   --min-width: 64px;
@@ -41,4 +35,8 @@ ion-toolbar {
 
 ion-card {
   width: 100%;
+}
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
 }

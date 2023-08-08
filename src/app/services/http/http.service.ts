@@ -42,6 +42,17 @@ export class HttpService {
       });
   }
 
+  logout() {
+    // Example: Remove the access token from cookies
+    this.cookieService.delete('access');
+    // this.cookieService.delete('refresh');
+
+    // Example: Make an HTTP request to the logout endpoint
+    // return this.http.post(`${this.baseUrl}/auth/logout`, {}).toPromise();
+
+    console.log('User logged out');
+  }
+
   get(url: string) {
     const access = this.cookieService.get('access');
     const headers = new HttpHeaders().set('Authorization', `JWT ${access}`);
