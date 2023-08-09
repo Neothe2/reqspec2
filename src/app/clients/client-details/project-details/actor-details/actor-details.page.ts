@@ -50,6 +50,7 @@ export class ActorDetailsPage implements OnInit {
   async onAddStaff() {
     const modal = await this.modalController.create({
       component: AddEditStaffModalComponent,
+      componentProps: { clientId: this.clientId, projectId: this.projectId },
     });
 
     modal.onDidDismiss().then((data: any) => {
@@ -106,9 +107,14 @@ export class ActorDetailsPage implements OnInit {
   }
 
   async onEditStaff(staff: any) {
+    console.log(staff);
     const modal = await this.modalController.create({
       component: AddEditStaffModalComponent,
-      componentProps: { defaultRole: staff.role },
+      componentProps: {
+        defaultRole: staff.role,
+        clientId: this.clientId,
+        projectId: this.projectId,
+      },
     });
 
     modal.onDidDismiss().then((data: any) => {

@@ -1,5 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}/"
+      ></ion-back-button>
+    </ion-buttons>
     <ion-title>{{ actor?.name }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onAddStaff()">
