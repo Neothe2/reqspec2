@@ -7,6 +7,7 @@ import { AddEditProjectModalComponent } from './add-edit-project-modal/add-edit-
 import { AddEditActorModalComponent } from './add-edit-actor-modal/add-edit-actor-modal.component';
 import { AddEditStaffModalComponent } from './add-edit-staff-modal/add-edit-staff-modal.component';
 import { AssociateStaffModalComponent } from './associate-staff-modal/associate-staff-modal.component';
+import { AssociateActorModalComponent } from './associate-actor-modal/associate-actor-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { AssociateStaffModalComponent } from './associate-staff-modal/associate-
     AddEditActorModalComponent,
     AddEditStaffModalComponent,
     AssociateStaffModalComponent,
+    AssociateActorModalComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })
