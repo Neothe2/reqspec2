@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddEditActorModalComponent } from 'src/app/components/add-edit-actor-modal/add-edit-actor-modal.component';
+import { AddEditStaffModalComponent } from 'src/app/components/add-edit-staff-modal/add-edit-staff-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { HttpService } from 'src/app/services/http/http.service';
 export class ProjectDetailsPage implements OnInit {
   project: any;
   actors: any[] = [];
+  staffList: any[] = [];
 
   clientId: string | null = '';
   projectId: string | null = '';
@@ -20,7 +22,8 @@ export class ProjectDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpService,
     private modalController: ModalController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -38,6 +41,7 @@ export class ProjectDetailsPage implements OnInit {
         console.log(data);
         this.project = data;
         this.actors = data.actors; // Assuming actors are part of the project object
+        this.staffList = data.staff;
       });
   }
 
@@ -60,6 +64,61 @@ export class ProjectDetailsPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  async onAddStaff() {}
+
+  async onEditStaff(staff: any) {
+    const modal = await this.modalController.create({
+      component: AddEditStaffModalComponent,
+      componentProps: { defaultRole: staff.role },
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .patch(
+            `api/clients/${this.clientId}/projects/${this.projectId}/staff/${staff.id}/`,
+            { ...data.data }
+          )
+          .then(() => {
+            this.getProjectDetails();
+          });
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async openActionSheetStaff(staff: any) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Edit',
+          handler: () => {
+            this.onEditStaff(staff);
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.http
+              .delete(
+                `api/clients/${this.clientId}/projects/${this.projectId}/staff/${staff.id}`
+              )
+              .then(() => {
+                this.getProjectDetails();
+              });
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
   }
 
   async editActor(actor: any) {
@@ -113,5 +172,17 @@ export class ProjectDetailsPage implements OnInit {
       ],
     });
     await actionSheet.present();
+  }
+
+  navigateToDetail(actor: any) {
+    this.router.navigateByUrl(
+      `/clients/detail/${this.clientId}/project-details/${this.projectId}/actor-details/${actor.id}`
+    );
+  }
+
+  navigateToDetailStaff(staff: any) {
+    this.router.navigateByUrl(
+      `/clients/detail/${this.clientId}/project-details/${this.projectId}/staff-details/${staff.id}`
+    );
   }
 }

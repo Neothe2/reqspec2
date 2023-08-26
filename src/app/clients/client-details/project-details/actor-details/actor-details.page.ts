@@ -43,7 +43,13 @@ export class ActorDetailsPage implements OnInit {
       )
       .then((data: any) => {
         this.actor = data;
-        this.staff = data.staff;
+        let staffIds = data.staff;
+        this.http
+          .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
+          .then((staff) => {
+            for (let staffId of staffIds) {
+            }
+          });
       });
   }
 

@@ -15,6 +15,23 @@ const routes: Routes = [
         (m) => m.ActorDetailsPageModule
       ),
   },
+  {
+    path: ':projectId/staff-details',
+    loadChildren: () =>
+      import('./staff-details/staff-details.module').then(
+        (m) => m.StaffDetailsPageModule
+      ),
+  },
+  {
+    path: ':projectId/actors',
+    loadChildren: () =>
+      import('./actors/actors.module').then((m) => m.ActorsPageModule),
+  },
+  {
+    path: ':projectId/staff',
+    loadChildren: () =>
+      import('./staff/staff.module').then((m) => m.StaffPageModule),
+  },
 ];
 
 @NgModule({

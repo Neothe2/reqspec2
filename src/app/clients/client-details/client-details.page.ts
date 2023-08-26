@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddEditProjectModalComponent } from 'src/app/components/add-edit-project-modal/add-edit-project-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
@@ -17,7 +17,8 @@ export class ClientDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpService,
     private actionSheetController: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -105,5 +106,11 @@ export class ClientDetailsPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  navigateToDetail(project: any) {
+    this.router.navigateByUrl(
+      `/clients/detail/${this.client?.id}/project-details/${project.id}`
+    );
   }
 }
