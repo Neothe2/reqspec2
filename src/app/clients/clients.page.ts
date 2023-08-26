@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../services/http/http.service';
 import { AddEditClientModalComponent } from '../components/add-edit-client-modal/add-edit-client-modal.component';
 import { ActionSheetController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clients',
@@ -14,7 +15,8 @@ export class ClientsPage implements OnInit {
   constructor(
     private http: HttpService,
     private modalController: ModalController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private router: Router
   ) {
     this.getClients();
   }
@@ -26,6 +28,10 @@ export class ClientsPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  navigateToDetail(client: any) {
+    this.router.navigateByUrl(`clients/detail/${client.id}`);
+  }
 
   // constructor(private modalController: ModalController) {}
 

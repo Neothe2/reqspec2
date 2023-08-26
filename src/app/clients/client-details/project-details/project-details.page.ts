@@ -66,12 +66,31 @@ export class ProjectDetailsPage implements OnInit {
     return await modal.present();
   }
 
-  async onAddStaff() {}
+  async onAddStaff() {
+    const modal = await this.modalController.create({
+      component: AddEditStaffModalComponent,
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .post(
+            `api/clients/${this.clientId}/projects/${this.projectId}/staff/`,
+            { ...data.data, project: this.projectId }
+          )
+          .then(() => {
+            this.getProjectDetails();
+          });
+      }
+    });
+
+    return await modal.present();
+  }
 
   async onEditStaff(staff: any) {
     const modal = await this.modalController.create({
       component: AddEditStaffModalComponent,
-      componentProps: { defaultRole: staff.role },
+      componentProps: { defaultRole: staff.name },
     });
 
     modal.onDidDismiss().then((data: any) => {
@@ -124,7 +143,7 @@ export class ProjectDetailsPage implements OnInit {
   async editActor(actor: any) {
     const modal = await this.modalController.create({
       component: AddEditActorModalComponent,
-      componentProps: { defaultName: actor.name },
+      componentProps: { defaultRole: actor.role },
     });
 
     modal.onDidDismiss().then((data: any) => {

@@ -29,7 +29,7 @@ export class AddEditStaffModalComponent implements OnInit {
     const defaultRole = this.navParams.get('defaultRole');
     this.staffForm = this.formBuilder.group({
       // name: [this.defaultName || '', Validators.required],
-      role: [defaultRole || '', Validators.required],
+      name: [defaultRole || '', Validators.required],
     });
     console.log(this.defaultRole);
 
