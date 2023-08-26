@@ -32,10 +32,57 @@ export class AssociateStaffModalComponent implements OnInit {
   getData() {
     this.http
       .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
-      .then((staff) => {
-        console.log(staff);
+      .then((staff: any) => {
+        this.http
+          .get(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/`
+          )
+          .then((actor: any) => {
+            let staffIds = [];
+            for (let staffObject of actor.staff) {
+              staffIds.push(staffObject.id);
+            }
+
+            for (let staffId of staffIds) {
+              this.staffList = this.staffList.filter(
+                (staffObject) => staffObject.id != staffId
+              );
+            }
+          });
+        this.staffList = staff.results;
       });
   }
 
-  dismissModal() {}
+  staffList: any[] = []; // This should be populated with your staff data
+  checkedItems: any[] = [];
+
+  // Sample data (you should fetch the actual data)
+  // staffList = [
+  //   { id: 1, name: 'John Doe' },
+  //   { id: 2, name: 'Jane Smith' },
+  //   // ... other staff members
+  // ];
+
+  updateCheckedItems(staffMember: any, event: any) {
+    if (event.detail.checked) {
+      // Add the staff member to the checkedItems array
+      this.checkedItems.push(staffMember);
+    } else {
+      // Remove the staff member from the checkedItems array
+      const index = this.checkedItems.findIndex(
+        (item) => item.id === staffMember.id
+      );
+      if (index > -1) {
+        this.checkedItems.splice(index, 1);
+      }
+    }
+  }
+
+  dismissModal() {
+    this.modalController.dismiss();
+  }
+
+  submit() {
+    this.modalController.dismiss(this.checkedItems);
+  }
 }

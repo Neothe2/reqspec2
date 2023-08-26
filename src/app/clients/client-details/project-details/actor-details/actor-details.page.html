@@ -28,7 +28,7 @@
           <ion-card-content>
             <ion-list>
               <ion-item *ngFor="let staff of staff">
-                <ion-label> {{ staff.role }} </ion-label>
+                <ion-label> {{ staff.name }} </ion-label>
                 <ion-buttons slot="end">
                   <ion-button (click)="openActionSheet(staff)">
                     <ion-icon

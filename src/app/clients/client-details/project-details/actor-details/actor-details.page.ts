@@ -46,17 +46,17 @@ export class ActorDetailsPage implements OnInit {
         console.log('something');
         console.log(data);
         this.actor = data;
-        let staffIds = data.staff;
-        this.http
-          .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
-          .then((staff: any) => {
-            console.log(staff);
-            for (let staffId of staffIds) {
-              this.staff = (staff.results as any[]).filter(
-                (staff) => (staff.id = staffId)
-              );
-            }
-          });
+        this.staff = data.staff;
+        // this.http
+        //   .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
+        //   .then((staff: any) => {
+        //     console.log(staff);
+        //     for (let staffId of staffIds) {
+        //       this.staff = (staff.results as any[]).filter(
+        //         (staff) => (staff.id = staffId)
+        //       );
+        //     }
+        //   });
       });
   }
 
@@ -74,13 +74,21 @@ export class ActorDetailsPage implements OnInit {
       if (data.data) {
         console.log(data.data);
         console.log(data);
+        let staffIds = [];
+        for (let staff of data.data) {
+          staffIds.push(staff.id);
+        }
+        let existingStaff = [];
+
+        for (let staffObject of this.actor.staff) {
+          existingStaff.push(staffObject.id);
+        }
         this.http
-          .post(
-            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actor.id}/staff/`,
+          .patch(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actor.id}/`,
             {
-              // name: data.data.name,
-              role: data.data.role,
-              actors: [this.actor.id],
+              //  : data.data. ,
+              staff: [...staffIds, ...existingStaff],
             }
           )
           .then(() => {
@@ -103,11 +111,27 @@ export class ActorDetailsPage implements OnInit {
           },
         },
         {
-          text: 'Delete',
+          text: 'Remove',
           handler: () => {
+            console.log(
+              this.actor.staff.filter(
+                (staffinlist: any) => staffinlist.id != staff.id
+              )
+            );
+
+            let staffObjectList = this.actor.staff.filter(
+              (staffinlist: any) => staffinlist.id != staff.id
+            );
+            let staffIdList = [];
+            for (let staffObject of staffObjectList) {
+              staffIdList.push(staffObject.id);
+            }
             this.http
-              .delete(
-                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actor.id}/staff/${staff.id}/`
+              .patch(
+                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/`,
+                {
+                  staff: staffIdList,
+                }
               )
               .then(() => {
                 this.getActorDetails();
@@ -128,7 +152,7 @@ export class ActorDetailsPage implements OnInit {
     const modal = await this.modalController.create({
       component: AddEditStaffModalComponent,
       componentProps: {
-        defaultRole: staff.role,
+        defaultRole: staff.name,
         clientId: this.clientId,
         projectId: this.projectId,
       },
@@ -138,10 +162,10 @@ export class ActorDetailsPage implements OnInit {
       if (data.data) {
         this.http
           .patch(
-            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actor.id}/staff/${staff.id}/`,
+            `api/clients/${this.clientId}/projects/${this.projectId}/staff/${staff.id}/`,
             {
-              // name: data.data.name,
-              role: data.data.role,
+              //  : data.data. ,
+              name: data.data.role,
             }
           )
           .then(() => {
