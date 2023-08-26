@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http/http.service';
 import { AddEditStaffModalComponent } from '../../../../components/add-edit-staff-modal/add-edit-staff-modal.component';
+import { AssociateStaffModalComponent } from 'src/app/components/associate-staff-modal/associate-staff-modal.component';
 
 @Component({
   selector: 'app-actor-details',
@@ -42,12 +43,18 @@ export class ActorDetailsPage implements OnInit {
         `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}`
       )
       .then((data: any) => {
+        console.log('something');
+        console.log(data);
         this.actor = data;
         let staffIds = data.staff;
         this.http
           .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
-          .then((staff) => {
+          .then((staff: any) => {
+            console.log(staff);
             for (let staffId of staffIds) {
+              this.staff = (staff.results as any[]).filter(
+                (staff) => (staff.id = staffId)
+              );
             }
           });
       });
@@ -55,8 +62,12 @@ export class ActorDetailsPage implements OnInit {
 
   async onAddStaff() {
     const modal = await this.modalController.create({
-      component: AddEditStaffModalComponent,
-      componentProps: { clientId: this.clientId, projectId: this.projectId },
+      component: AssociateStaffModalComponent,
+      componentProps: {
+        clientId: this.clientId,
+        projectId: this.projectId,
+        actorId: this.actorId,
+      },
     });
 
     modal.onDidDismiss().then((data: any) => {

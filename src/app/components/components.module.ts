@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AddEditProjectModalComponent } from './add-edit-project-modal/add-edit-project-modal.component';
 import { AddEditActorModalComponent } from './add-edit-actor-modal/add-edit-actor-modal.component';
 import { AddEditStaffModalComponent } from './add-edit-staff-modal/add-edit-staff-modal.component';
+import { AssociateStaffModalComponent } from './associate-staff-modal/associate-staff-modal.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { AddEditStaffModalComponent } from './add-edit-staff-modal/add-edit-staf
     AddEditProjectModalComponent,
     AddEditActorModalComponent,
     AddEditStaffModalComponent,
+    AssociateStaffModalComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })

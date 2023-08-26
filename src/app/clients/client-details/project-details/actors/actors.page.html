@@ -1,13 +1,39 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>actors</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Actors in "{{project?.title}}"</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onAddActor()" fill="clear">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">actors</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="content-background">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item
+            *ngFor="let actor of actors"
+            (click)="navigateToDetail(actor)"
+          >
+            <ion-label>• {{ actor.role }} </ion-label>
+            <ion-buttons slot="end">
+              <ion-button
+                (click)="openActionSheet(actor); $event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

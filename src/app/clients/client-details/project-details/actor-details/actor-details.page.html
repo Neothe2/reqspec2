@@ -5,12 +5,7 @@
         defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}/"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ actor?.name }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="onAddStaff()">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>{{ actor?.role }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,8 +14,16 @@
     <ion-row>
       <ion-col size="12">
         <ion-card>
+          <ion-button
+            (click)="onAddStaff()"
+            class="add-actor-button"
+            fill="clear"
+            color="dark"
+          >
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
           <ion-card-header>
-            <ion-card-title>Staff:</ion-card-title>
+            <ion-card-title>Associated Staff:</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list>

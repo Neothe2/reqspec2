@@ -16,11 +16,11 @@ export class AddEditActorModalComponent implements OnInit {
     private navParams: NavParams
   ) {
     this.actorForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      role: ['', Validators.required],
     });
 
-    const defaultName = this.navParams.get('defaultName');
-    this.actorForm.get('name')?.setValue(defaultName);
+    const defaultRole = this.navParams.get('defaultRole');
+    this.actorForm.get('role')?.setValue(defaultRole);
   }
 
   ngOnInit() {}

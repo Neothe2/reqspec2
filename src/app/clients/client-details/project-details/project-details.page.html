@@ -47,7 +47,7 @@
                 *ngFor="let actor of actors"
                 (click)="navigateToDetail(actor)"
               >
-                <ion-label>• {{ actor.name }} </ion-label>
+                <ion-label>• {{ actor.role }} </ion-label>
                 <ion-buttons slot="end">
                   <ion-button
                     (click)="openActionSheet(actor); $event.stopPropagation()"
@@ -84,7 +84,7 @@
                 *ngFor="let staff of staffList"
                 (click)="navigateToDetailStaff(staff)"
               >
-                <ion-label>• {{ staff.role }} </ion-label>
+                <ion-label>• {{ staff.name }} </ion-label>
                 <ion-buttons slot="end">
                   <ion-button
                     (click)="openActionSheetStaff(staff); $event.stopPropagation()"
