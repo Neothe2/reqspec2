@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AddEditClientModalComponent } from './add-edit-client-modal/add-edit-client-modal.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddEditProjectModalComponent } from './add-edit-project-modal/add-edit-project-modal.component';
 import { AddEditActorModalComponent } from './add-edit-actor-modal/add-edit-actor-modal.component';
 import { AddEditStaffModalComponent } from './add-edit-staff-modal/add-edit-staff-modal.component';
 import { AssociateStaffModalComponent } from './associate-staff-modal/associate-staff-modal.component';
 import { AssociateActorModalComponent } from './associate-actor-modal/associate-actor-modal.component';
+import { AddEditUserstoryFromProjectComponent } from './add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AssociateActorModalComponent } from './associate-actor-modal/associate-
     AddEditStaffModalComponent,
     AssociateStaffModalComponent,
     AssociateActorModalComponent,
+    AddEditUserstoryFromProjectComponent,
   ],
-  imports: [CommonModule, IonicModule, ReactiveFormsModule],
+  imports: [CommonModule, IonicModule, ReactiveFormsModule, FormsModule],
 })
 export class ComponentsModule {}

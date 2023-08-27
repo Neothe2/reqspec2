@@ -102,6 +102,42 @@
               </ion-card-content>
             </ion-card>
           </ion-accordion>
+          <ion-accordion>
+            <ion-item slot="header" color="light">User Stories</ion-item>
+            <ion-card slot="content">
+              <ion-button
+                (click)="onAddUserStory()"
+                class="add-actor-button"
+                fill="clear"
+                color="dark"
+              >
+                <ion-icon name="add" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-card-header>
+                <ion-card-title>User Stories:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item
+                    *ngFor="let userStory of userStories"
+                    (click)="navigateToDetailUserStory(userStory)"
+                  >
+                    <ion-label>• {{ userStory.story }} </ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button
+                        (click)="openActionSheetUserStory(userStory); $event.stopPropagation()"
+                      >
+                        <ion-icon
+                          name="ellipsis-vertical"
+                          slot="icon-only"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-accordion>
         </ion-accordion-group>
         <!-- <ion-card>
           <ion-button
