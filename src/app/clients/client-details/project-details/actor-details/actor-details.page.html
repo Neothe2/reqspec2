@@ -2,7 +2,7 @@
   <ion-toolbar color="light">
     <ion-buttons slot="start">
       <ion-back-button
-        defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}/"
+        defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ actor?.role }}</ion-title>
@@ -69,6 +69,42 @@
                     <ion-buttons slot="end">
                       <ion-button
                         (click)="openActionSheetUserStory(userStory); $event.stopPropagation()"
+                      >
+                        <ion-icon
+                          name="ellipsis-vertical"
+                          slot="icon-only"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-accordion>
+          <ion-accordion>
+            <ion-item slot="header" color="light">Use Cases</ion-item>
+            <ion-card slot="content">
+              <ion-button
+                (click)="onAddUseCase()"
+                class="add-actor-button"
+                fill="clear"
+                color="dark"
+              >
+                <ion-icon name="add" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-card-header>
+                <ion-card-title>User Cases:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item
+                    *ngFor="let useCase of useCases"
+                    (click)="navigateToDetailUseCase(useCase)"
+                  >
+                    <ion-label>• {{ useCase.title }} </ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button
+                        (click)="openActionSheetUseCase(useCase); $event.stopPropagation()"
                       >
                         <ion-icon
                           name="ellipsis-vertical"

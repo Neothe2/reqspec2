@@ -84,7 +84,11 @@ export class ProjectDetailsPage implements OnInit {
     return await modal.present();
   }
 
-  navigateToDetailUserStory(userStory: any) {}
+  navigateToDetailUserStory(userStory: any) {
+    this.router.navigateByUrl(
+      `clients/detail/${this.clientId}/project-details/${this.projectId}/actor-details/${userStory.actor}/userstory-details/${userStory.id}`
+    );
+  }
 
   async onEditUserStory(userStory: any) {
     const modal = await this.modalController.create({

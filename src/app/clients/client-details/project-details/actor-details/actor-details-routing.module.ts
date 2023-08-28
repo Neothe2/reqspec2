@@ -8,6 +8,13 @@ const routes: Routes = [
     path: ':actorId',
     component: ActorDetailsPage,
   },
+  {
+    path: ':actorId/userstory-details',
+    loadChildren: () =>
+      import('./userstory-details/userstory-details.module').then(
+        (m) => m.UserstoryDetailsPageModule
+      ),
+  },
 ];
 
 @NgModule({

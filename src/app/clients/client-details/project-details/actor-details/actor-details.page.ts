@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http/http.service';
 import { AddEditStaffModalComponent } from '../../../../components/add-edit-staff-modal/add-edit-staff-modal.component';
@@ -16,6 +16,7 @@ export class ActorDetailsPage implements OnInit {
 
   staff: any[] = [];
   userStories: any[] = [];
+  useCases: any[] = [];
 
   clientId: string | null = '';
   projectId: string | null = '';
@@ -25,7 +26,8 @@ export class ActorDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpService,
     private actionSheetController: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -50,6 +52,7 @@ export class ActorDetailsPage implements OnInit {
         console.log(data);
         this.actor = data;
         this.staff = data.staff;
+        this.useCases = data.use_cases;
         this.userStories = data.user_stories;
         console.log('User stories:');
         console.log(this.userStories);
@@ -65,6 +68,47 @@ export class ActorDetailsPage implements OnInit {
         //   });
       });
   }
+
+  // Use Cases ⬇️⬇️⬇️
+
+  async onEditUseCase(useCase: any) {}
+
+  async onAddUseCase() {}
+
+  async openActionSheetUseCase(useCase: any) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Edit',
+          handler: () => {
+            this.onEditUseCase(useCase);
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.http
+              .delete(
+                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${useCase.actor}/user_stories/${useCase.id}/`
+              )
+              .then(() => {
+                this.getActorDetails();
+              });
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
+
+  navigateToDetailUseCase(useCase: any) {}
+
+  // User Stories ⬇️⬇️⬇️
 
   async onAddUserStory() {
     const modal = await this.modalController.create({
@@ -96,7 +140,11 @@ export class ActorDetailsPage implements OnInit {
     return await modal.present();
   }
 
-  navigateToDetailUserStory(userStory: any) {}
+  navigateToDetailUserStory(userStory: any) {
+    this.router.navigateByUrl(
+      `clients/detail/${this.clientId}/project-details/${this.projectId}/actor-details/${this.actorId}/userstory-details/${userStory.id}`
+    );
+  }
 
   async onEditUserStory(userStory: any) {
     const modal = await this.modalController.create({
@@ -156,6 +204,8 @@ export class ActorDetailsPage implements OnInit {
     });
     await actionSheet.present();
   }
+
+  // Staff ⬇️⬇️⬇️
 
   async onAddStaff() {
     const modal = await this.modalController.create({
