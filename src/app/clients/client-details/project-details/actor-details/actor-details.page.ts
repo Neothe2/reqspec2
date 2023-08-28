@@ -5,6 +5,7 @@ import { HttpService } from 'src/app/services/http/http.service';
 import { AddEditStaffModalComponent } from '../../../../components/add-edit-staff-modal/add-edit-staff-modal.component';
 import { AssociateStaffModalComponent } from 'src/app/components/associate-staff-modal/associate-staff-modal.component';
 import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edit-userstory-from-project/add-edit-userstory-from-project.component';
+import { AddEditUseCaseModalComponent } from 'src/app/components/add-edit-use-case-modal/add-edit-use-case-modal.component';
 
 @Component({
   selector: 'app-actor-details',
@@ -71,9 +72,54 @@ export class ActorDetailsPage implements OnInit {
 
   // Use Cases ⬇️⬇️⬇️
 
-  async onEditUseCase(useCase: any) {}
+  async onEditUseCase(useCase: any) {
+    const modal = await this.modalController.create({
+      component: AddEditUseCaseModalComponent,
+      componentProps: {
+        defaultTitle: useCase.title,
+      },
+    });
 
-  async onAddUseCase() {}
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .patch(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${useCase.actor}/use_cases/${useCase.id}/`,
+            { title: data.data }
+          )
+          .then(() => {
+            this.getActorDetails();
+          });
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async onAddUseCase() {
+    const modal = await this.modalController.create({
+      component: AddEditUseCaseModalComponent,
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .post(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/use_cases/`,
+            {
+              title: data.data,
+              actor: this.actorId,
+            }
+          )
+          .then(() => {
+            this.getActorDetails();
+          });
+        console.log(data.data);
+      }
+    });
+
+    return await modal.present();
+  }
 
   async openActionSheetUseCase(useCase: any) {
     const actionSheet = await this.actionSheetController.create({
@@ -90,7 +136,7 @@ export class ActorDetailsPage implements OnInit {
           handler: () => {
             this.http
               .delete(
-                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${useCase.actor}/user_stories/${useCase.id}/`
+                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${useCase.actor}/use_cases/${useCase.id}/`
               )
               .then(() => {
                 this.getActorDetails();

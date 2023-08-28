@@ -1,3 +1,19 @@
-<p>
-  add-edit-use-case-modal works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Project</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <form [formGroup]="projectForm">
+      <ion-item>
+        <ion-label position="floating">Title</ion-label>
+        <ion-input formControlName="title" type="text"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="addProject()">OK</ion-button>
+    </form>
+  </ion-list>
+</ion-content>
