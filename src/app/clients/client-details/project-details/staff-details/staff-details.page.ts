@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddEditStaffModalComponent } from 'src/app/components/add-edit-staff-modal/add-edit-staff-modal.component';
+import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 import { AssociateActorModalComponent } from 'src/app/components/associate-actor-modal/associate-actor-modal.component';
 import { AssociateStaffModalComponent } from 'src/app/components/associate-staff-modal/associate-staff-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
@@ -14,6 +15,7 @@ import { HttpService } from 'src/app/services/http/http.service';
 export class StaffDetailsPage implements OnInit {
   staff: any;
   actors: any[] = [];
+  userStories: any[] = [];
 
   clientId: string | null = '';
   projectId: string | null = '';
@@ -62,9 +64,105 @@ export class StaffDetailsPage implements OnInit {
                   (actor) => actor.id == actorId
                 ),
               ];
+              this.userStories = [];
+              for (let actor of this.actors) {
+                for (let user_story of actor.user_stories) {
+                  this.userStories.push(user_story);
+                }
+              }
             }
           });
       });
+  }
+
+  async onAddUserStory() {
+    const modal = await this.modalController.create({
+      component: AddEditUserstoryFromProjectComponent,
+      componentProps: {
+        clientId: this.clientId,
+        projectId: this.projectId,
+        fromStaffDetail: true,
+        associatedActors: this.actors,
+      },
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .post(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${data.data.actor}/user_stories/`,
+            { ...data.data }
+          )
+          .then(() => {
+            this.getStaffDetails();
+          });
+        console.log(data.data);
+      }
+    });
+
+    return await modal.present();
+  }
+
+  navigateToDetailUserStory(userStory: any) {}
+
+  async onEditUserStory(userStory: any) {
+    const modal = await this.modalController.create({
+      component: AddEditUserstoryFromProjectComponent,
+      componentProps: {
+        defaultStory: userStory.story,
+        defaultActorId: userStory.actor,
+        clientId: this.clientId,
+        projectId: this.projectId,
+        fromStaffDetail: true,
+        associatedActors: this.actors,
+      },
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .patch(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${userStory.actor}/user_stories/${userStory.id}/`,
+            { ...data.data }
+          )
+          .then(() => {
+            this.getStaffDetails();
+          });
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async openActionSheetUserStory(userStory: any) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Edit',
+          handler: () => {
+            this.onEditUserStory(userStory);
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.http
+              .delete(
+                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${userStory.actor}/user_stories/${userStory.id}/`
+              )
+              .then(() => {
+                this.getStaffDetails();
+              });
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
   }
 
   async onAddStaff() {

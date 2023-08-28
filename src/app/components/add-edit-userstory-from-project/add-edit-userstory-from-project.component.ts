@@ -17,6 +17,9 @@ export class AddEditUserstoryFromProjectComponent implements OnInit {
   // @Input() staffId!: string | null;
   @Input() clientId!: string | null;
   @Input() projectId!: string | null;
+  @Input() fromActorDetail: boolean = false;
+  @Input() fromStaffDetail: boolean = false;
+  @Input() associatedActors: any[] = [];
   form!: FormGroup;
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +47,12 @@ export class AddEditUserstoryFromProjectComponent implements OnInit {
     if (!this.defaultActorId) {
       this.defaultActorId = null;
     }
+
+    if (this.fromStaffDetail) {
+      if (this.associatedActors) {
+        this.actorList = this.associatedActors;
+      }
+    }
   }
 
   getData() {
@@ -64,6 +73,11 @@ export class AddEditUserstoryFromProjectComponent implements OnInit {
         //     }
         //   });
         this.actorList = actors.results;
+        if (this.fromStaffDetail) {
+          if (this.associatedActors) {
+            this.actorList = this.associatedActors;
+          }
+        }
       });
   }
 

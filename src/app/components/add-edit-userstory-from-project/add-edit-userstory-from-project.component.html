@@ -16,17 +16,17 @@
       </ion-item>
     </form>
 
-    <ion-card-header>
+    <ion-card-header *ngIf="!fromActorDetail">
       <ion-card-title>Actor:</ion-card-title>
     </ion-card-header>
 
-    <ion-card-content>
+    <ion-card-content *ngIf="!fromActorDetail">
       <ion-list>
         <ion-radio-group [(ngModel)]="defaultActorId">
           <ion-item *ngFor="let staffMember of actorList">
             <ion-label>{{ staffMember.role }}</ion-label>
             <ion-radio
-              value="{{ staffMember.id }}"
+              [value]="staffMember.id"
               (click)="updateCheckedItems(staffMember, $event)"
             ></ion-radio>
           </ion-item>
