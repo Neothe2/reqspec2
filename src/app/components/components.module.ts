@@ -23,6 +23,7 @@ import { AddEditUseCaseModalComponent } from './add-edit-use-case-modal/add-edit
     AddEditUserstoryFromProjectComponent,
     AssociateUseCaseModalComponent,
     AddEditUseCaseModalComponent,
+    AssociateUseCaseModalComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule, FormsModule],
 })

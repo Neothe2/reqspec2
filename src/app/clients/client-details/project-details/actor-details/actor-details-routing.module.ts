@@ -15,6 +15,10 @@ const routes: Routes = [
         (m) => m.UserstoryDetailsPageModule
       ),
   },
+  {
+    path: 'use-case-details',
+    loadChildren: () => import('./use-case-details/use-case-details.module').then( m => m.UseCaseDetailsPageModule)
+  },
 ];
 
 @NgModule({
