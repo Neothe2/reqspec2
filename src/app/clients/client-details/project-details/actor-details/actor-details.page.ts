@@ -152,7 +152,11 @@ export class ActorDetailsPage implements OnInit {
     await actionSheet.present();
   }
 
-  navigateToDetailUseCase(useCase: any) {}
+  navigateToDetailUseCase(useCase: any) {
+    this.router.navigateByUrl(
+      `clients/detail/${this.clientId}/project-details/${this.projectId}/actor-details/${this.actorId}/use-case-details/${useCase.id}`
+    );
+  }
 
   // User Stories ⬇️⬇️⬇️
 

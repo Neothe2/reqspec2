@@ -5,9 +5,9 @@ import { UseCaseDetailsPage } from './use-case-details.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: UseCaseDetailsPage
-  }
+    path: ':useCaseId',
+    component: UseCaseDetailsPage,
+  },
 ];
 
 @NgModule({

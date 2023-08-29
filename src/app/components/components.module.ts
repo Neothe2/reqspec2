@@ -11,6 +11,7 @@ import { AssociateActorModalComponent } from './associate-actor-modal/associate-
 import { AddEditUserstoryFromProjectComponent } from './add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 import { AssociateUseCaseModalComponent } from './associate-use-case-modal/associate-use-case-modal.component';
 import { AddEditUseCaseModalComponent } from './add-edit-use-case-modal/add-edit-use-case-modal.component';
+import { AssociateUserStoryModalComponent } from './associate-user-story-modal/associate-user-story-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AddEditUseCaseModalComponent } from './add-edit-use-case-modal/add-edit
     AssociateUseCaseModalComponent,
     AddEditUseCaseModalComponent,
     AssociateUseCaseModalComponent,
+    AssociateUserStoryModalComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule, FormsModule],
 })

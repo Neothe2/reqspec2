@@ -1,13 +1,54 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>use-case-details</ion-title>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/clients/detail/{{clientId}}/project-details/{{projectId}}/actor-details/{{actorId}}"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ useCase?.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">use-case-details</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-accordion-group>
+          <ion-accordion>
+            <ion-item slot="header" color="light"
+              >Associated User Stories</ion-item
+            >
+            <ion-card slot="content">
+              <ion-button
+                (click)="onAddUserStory()"
+                class="add-actor-button"
+                fill="clear"
+                color="dark"
+              >
+                <ion-icon name="add" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-card-header>
+                <ion-card-title>Associated User Stories:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item *ngFor="let userStory of userStories">
+                    <ion-label> {{ userStory.story }} </ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button (click)="openActionSheet(userStory)">
+                        <ion-icon
+                          name="ellipsis-vertical"
+                          slot="icon-only"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

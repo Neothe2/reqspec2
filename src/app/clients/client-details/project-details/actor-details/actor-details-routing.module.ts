@@ -16,8 +16,11 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'use-case-details',
-    loadChildren: () => import('./use-case-details/use-case-details.module').then( m => m.UseCaseDetailsPageModule)
+    path: ':actorId/use-case-details',
+    loadChildren: () =>
+      import('./use-case-details/use-case-details.module').then(
+        (m) => m.UseCaseDetailsPageModule
+      ),
   },
 ];
 
