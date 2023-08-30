@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
+import { AddEditUseCaseSpecificationSectionModalComponent } from 'src/app/components/add-edit-use-case-specification-section-modal/add-edit-use-case-specification-section-modal.component';
 import { AssociateUserStoryModalComponent } from 'src/app/components/associate-user-story-modal/associate-user-story-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
 
@@ -13,6 +14,8 @@ export class UseCaseDetailsPage implements OnInit {
   useCase: any;
 
   userStories: any[] = [];
+  useCaseSpecification: any = {};
+  specificationSections: any[] = [];
 
   clientId: string | null = '';
   projectId: string | null = '';
@@ -52,6 +55,8 @@ export class UseCaseDetailsPage implements OnInit {
         this.userStories = data.user_stories;
         console.log('User stories:');
         console.log(this.userStories);
+        this.useCaseSpecification = data.specification;
+        this.specificationSections = this.useCaseSpecification?.sections;
         // this.http
         //   .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
         //   .then((staff: any) => {
@@ -64,6 +69,107 @@ export class UseCaseDetailsPage implements OnInit {
         //   });
       });
   }
+
+  // Use case specifications ⬇️⬇️⬇️
+
+  async onAddUseCaseSpecification() {
+    if (!this.useCaseSpecification) {
+      this.http
+        .post(
+          `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/use_cases/${this.useCaseId}/use_case_specifications/`,
+          { use_case: this.useCaseId }
+        )
+        .then((data) => {
+          this.useCaseSpecification = data;
+          this.onAddUseCaseSpecificationSection();
+          return;
+        });
+    } else {
+      this.onAddUseCaseSpecificationSection();
+    }
+  }
+
+  async onAddUseCaseSpecificationSection() {
+    const modal = await this.modalController.create({
+      component: AddEditUseCaseSpecificationSectionModalComponent,
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .post(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/use_cases/${this.useCaseId}/use_case_specifications/${this.useCaseSpecification.id}/specification_sections/`,
+            {
+              body: data.data,
+              specification: this.useCaseSpecification.id,
+            }
+          )
+          .then(() => {
+            this.getUseCaseDetails();
+          });
+        console.log(data.data);
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async onEditSpecificationSection(specificationSection: any) {
+    const modal = await this.modalController.create({
+      component: AddEditUseCaseSpecificationSectionModalComponent,
+      componentProps: {
+        defaultBody: specificationSection.body,
+      },
+    });
+
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        this.http
+          .patch(
+            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.useCase.actor}/use_cases/${this.useCase.id}/use_case_specifications/${this.useCaseSpecification.id}/specification_sections/${specificationSection.id}/`,
+            { body: data.data }
+          )
+          .then(() => {
+            this.getUseCaseDetails();
+          });
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async openActionSheetUseCaseSpecification(useCaseSpecification: any) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Edit',
+          handler: () => {
+            this.onEditSpecificationSection(useCaseSpecification);
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.http
+              .delete(
+                `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.useCase.actor}/use_cases/${this.useCase.id}/use_case_specifications/${useCaseSpecification.specification}/specification_sections/${useCaseSpecification.id}/`
+              )
+              .then(() => {
+                this.getUseCaseDetails();
+              });
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
+
+  navigateToDetailUseCaseSpecification(useCaseSpecification: any) {}
 
   async onAddUserStory() {
     const modal = await this.modalController.create({

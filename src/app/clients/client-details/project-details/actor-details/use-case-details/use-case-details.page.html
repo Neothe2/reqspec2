@@ -47,6 +47,46 @@
               </ion-card-content>
             </ion-card>
           </ion-accordion>
+          <ion-accordion>
+            <ion-item slot="header" color="light"
+              >Use Case Specification</ion-item
+            >
+            <ion-card slot="content">
+              <ion-button
+                (click)="onAddUseCaseSpecification()"
+                class="add-actor-button"
+                fill="clear"
+                color="dark"
+              >
+                <ion-icon name="add" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-card-header>
+                <ion-card-title>User Case Specifications:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item
+                    *ngFor="let useCaseSpecification of specificationSections"
+                    (click)="navigateToDetailUseCaseSpecification(useCaseSpecification)"
+                  >
+                    <ion-label class="ion-wrap"
+                      >• {{ useCaseSpecification.body }}
+                    </ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button
+                        (click)="openActionSheetUseCaseSpecification(useCaseSpecification); $event.stopPropagation()"
+                      >
+                        <ion-icon
+                          name="ellipsis-vertical"
+                          slot="icon-only"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-accordion>
         </ion-accordion-group>
       </ion-col>
     </ion-row>

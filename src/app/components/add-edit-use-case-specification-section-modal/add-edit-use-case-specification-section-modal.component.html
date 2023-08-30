@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Specification</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <form [formGroup]="projectForm">
+      <ion-item>
+        <ion-label position="floating">Body</ion-label>
+        <ion-textarea formControlName="body" type="text"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" (click)="addProject()">OK</ion-button>
+    </form>
+  </ion-list>
+</ion-content>
