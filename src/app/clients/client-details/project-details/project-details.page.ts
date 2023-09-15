@@ -45,6 +45,7 @@ export class ProjectDetailsPage implements OnInit {
         this.actors = data.actors; // Assuming actors are part of the project object
         this.staffList = data.staff;
         this.userStories = [];
+        // TODO This part is going to be a method
         for (let actor of this.actors) {
           for (let story of actor.user_stories) {
             if (!this.userStories.includes(story)) {

@@ -30,26 +30,33 @@ export class AssociateStaffModalComponent implements OnInit {
   }
 
   getData() {
-    this.http
-      .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
-      .then((staff: any) => {
-        this.http
-          .get(
-            `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/`
-          )
-          .then((actor: any) => {
-            let staffIds = [];
-            for (let staffObject of actor.staff) {
-              staffIds.push(staffObject.id);
-            }
+    // this.http
+    //   .get(`api/clients/${this.clientId}/projects/${this.projectId}/staff/`)
+    //   .then((staff: any) => {
+    //     this.http
+    //       .get(
+    //         `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/`
+    //       )
+    //       .then((actor: any) => {
+    //         let staffIds = [];
+    //         for (let staffObject of actor.staff) {
+    //           staffIds.push(staffObject.id);
+    //         }
 
-            for (let staffId of staffIds) {
-              this.staffList = this.staffList.filter(
-                (staffObject) => staffObject.id != staffId
-              );
-            }
-          });
-        this.staffList = staff.results;
+    //         for (let staffId of staffIds) {
+    //           this.staffList = this.staffList.filter(
+    //             (staffObject) => staffObject.id != staffId
+    //           );
+    //         }
+    //       });
+    //     this.staffList = staff.results;
+    //   });
+    this.http
+      .get(
+        `api/clients/${this.clientId}/projects/${this.projectId}/actors/${this.actorId}/unassociated_staff/`
+      )
+      .then((unassociated_staff: any) => {
+        this.staffList = unassociated_staff;
       });
   }
 

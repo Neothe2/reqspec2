@@ -50,27 +50,38 @@ export class StaffDetailsPage implements OnInit {
         console.log(data);
         this.staff = data;
         let actorIds = data.actors;
+        // this.http
+        //   .get(
+        //     `api/clients/${this.clientId}/projects/${this.projectId}/actors/`
+        //   )
+        //   .then((actors: any) => {
+        //     console.log(actors);
+        //     //gets associated actors
+        //     this.actors = [];
+        //     for (let actorId of actorIds) {
+        //       this.actors = [
+        //         ...this.actors,
+        //         ...(actors.results as any[]).filter(
+        //           (actor) => actor.id == actorId
+        //         ),
+        //       ];
+
+        //       // gets associated user stories
+        //       this.userStories = [];
+        //       for (let actor of this.actors) {
+        //         for (let user_story of actor.user_stories) {
+        //           this.userStories.push(user_story);
+        //         }
+        //       }
+        //     }
+        //   });
+
         this.http
           .get(
-            `api/clients/${this.clientId}/projects/${this.projectId}/actors/`
+            `api/clients/${this.clientId}/projects/${this.projectId}/staff/${this.staffId}/associated_actors/`
           )
-          .then((actors: any) => {
-            console.log(actors);
-            this.actors = [];
-            for (let actorId of actorIds) {
-              this.actors = [
-                ...this.actors,
-                ...(actors.results as any[]).filter(
-                  (actor) => actor.id == actorId
-                ),
-              ];
-              this.userStories = [];
-              for (let actor of this.actors) {
-                for (let user_story of actor.user_stories) {
-                  this.userStories.push(user_story);
-                }
-              }
-            }
+          .then((associatedActors: any) => {
+            this.actors = associatedActors;
           });
       });
   }

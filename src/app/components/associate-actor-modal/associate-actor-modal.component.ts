@@ -31,22 +31,11 @@ export class AssociateActorModalComponent implements OnInit {
 
   getData() {
     this.http
-      .get(`api/clients/${this.clientId}/projects/${this.projectId}/actors/`)
-      .then((actors: any) => {
-        this.http
-          .get(
-            `api/clients/${this.clientId}/projects/${this.projectId}/staff/${this.staffId}/`
-          )
-          .then((staff: any) => {
-            let actorIds = staff.actors;
-
-            for (let actorId of actorIds) {
-              this.actorList = this.actorList.filter(
-                (actorObject) => actorObject.id != actorId
-              );
-            }
-          });
-        this.actorList = actors.results;
+      .get(
+        `api/clients/${this.clientId}/projects/${this.projectId}/staff/${this.staffId}/unassociated_actors/`
+      )
+      .then((unassociated_actors: any) => {
+        this.actorList = unassociated_actors;
       });
   }
 
