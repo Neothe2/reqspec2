@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../services/http/http.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,7 @@ export class RegisterPage {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private http: HttpService
+    private http: HttpClient
   ) {}
 
   register() {
@@ -30,12 +31,12 @@ export class RegisterPage {
     }
 
     this.http
-      .post('auth/users/', {
+      .post('http://108.166.190.142:100/auth/users/', {
         email: this.email,
         username: this.username,
         password: this.password,
       })
-      .then(() => {
+      .subscribe(() => {
         this.router.navigateByUrl('/login');
       });
 

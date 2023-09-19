@@ -122,7 +122,9 @@
                     *ngFor="let userStory of userStories"
                     (click)="navigateToDetailUserStory(userStory)"
                   >
-                    <ion-label>• {{ userStory.story }} </ion-label>
+                    <ion-label class="ion-text-wrap"
+                      >• {{ userStory.story }}
+                    </ion-label>
                     <ion-buttons slot="end">
                       <ion-button
                         (click)="openActionSheetUserStory(userStory); $event.stopPropagation()"

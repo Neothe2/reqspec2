@@ -4,3 +4,17 @@
   right: 0;
   z-index: 10; // Ensure it's above other elements
 }
+.user-story-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.user-story-text {
+  word-wrap: break-word;
+  flex: 1;
+}
+
+.user-story-ellipsis {
+  margin-left: 10px;
+}
