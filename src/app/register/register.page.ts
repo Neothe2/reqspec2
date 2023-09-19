@@ -31,7 +31,7 @@ export class RegisterPage {
     }
 
     this.http
-      .post('http://108.166.190.142:100/auth/users/', {
+      .post('https://info.dhwana.com:100/auth/users/', {
         email: this.email,
         username: this.username,
         password: this.password,

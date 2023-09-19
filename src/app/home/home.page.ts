@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ShortcutService } from '../services/shortcut/shortcut.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,29 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  private shortcutSubscription!: Subscription;
 
-  constructor() {}
+  constructor(private shortcutService: ShortcutService) {}
 
+  ngOnInit(): void {
+    this.shortcutSubscription = this.shortcutService.shortcut$.subscribe(
+      (shortcut) => {
+        if (shortcut) {
+          console.log(`Pressed: ${shortcut}`);
+          if (shortcut == 'Ctrl Alt h') {
+            let button = document.getElementById('hello') as HTMLButtonElement;
+            button.click();
+          }
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.shortcutSubscription.unsubscribe();
+  }
+
+  hello() {
+    console.log('Hello!');
+  }
 }
