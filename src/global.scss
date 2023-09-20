@@ -16,7 +16,7 @@
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
-@import '@ionic/angular/css/display.css';
+@import "@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
@@ -24,3 +24,33 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+// .ctrl-shortcut-button {
+//   text-decoration: underline;
+//   color: dodgerblue;
+// }
+
+// .alt-shortcut-button {
+//   text-decoration: underline;
+//   color: rgb(115, 242, 115);
+// }
+
+// .ctrl-alt-shortcut-button {
+//   text-decoration: underline;
+//   color: rgb(239, 82, 82);
+// }
+
+.ctrl-shortcut-button.active {
+  text-decoration: underline;
+  color: dodgerblue;
+}
+
+.alt-shortcut-button.active {
+  text-decoration: underline;
+  color: rgb(115, 242, 115);
+}
+
+.ctrl-alt-shortcut-button.active {
+  text-decoration: underline;
+  color: rgb(239, 82, 82);
+}

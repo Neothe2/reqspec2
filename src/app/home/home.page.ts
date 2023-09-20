@@ -15,13 +15,13 @@ export class HomePage {
   ngOnInit(): void {
     this.shortcutSubscription = this.shortcutService.shortcut$.subscribe(
       (shortcut) => {
-        if (shortcut) {
-          console.log(`Pressed: ${shortcut}`);
-          if (shortcut == 'Ctrl Alt h') {
-            let button = document.getElementById('hello') as HTMLButtonElement;
-            button.click();
-          }
-        }
+        // if (shortcut) {
+        //   console.log(`Pressed: ${shortcut}`);
+        //   if (shortcut == 'Ctrl Alt h') {
+        //     let button = document.getElementById('hello') as HTMLButtonElement;
+        //     button.click();
+        //   }
+        // }
       }
     );
   }

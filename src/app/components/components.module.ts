@@ -13,6 +13,7 @@ import { AssociateUseCaseModalComponent } from './associate-use-case-modal/assoc
 import { AddEditUseCaseModalComponent } from './add-edit-use-case-modal/add-edit-use-case-modal.component';
 import { AssociateUserStoryModalComponent } from './associate-user-story-modal/associate-user-story-modal.component';
 import { AddEditUseCaseSpecificationSectionModalComponent } from './add-edit-use-case-specification-section-modal/add-edit-use-case-specification-section-modal.component';
+import { ShortcutButtonDirective } from './shortcut-button.directive';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,9 @@ import { AddEditUseCaseSpecificationSectionModalComponent } from './add-edit-use
     AssociateUseCaseModalComponent,
     AssociateUserStoryModalComponent,
     AddEditUseCaseSpecificationSectionModalComponent,
+    ShortcutButtonDirective,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule, FormsModule],
+  exports: [ShortcutButtonDirective],
 })
 export class ComponentsModule {}
