@@ -11,7 +11,7 @@ import { ShortcutService } from '../services/shortcut/shortcut.service';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[data-shortcut]',
+  selector: '[keyboard-shortcut]',
 })
 export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   private subscription!: Subscription;
@@ -26,7 +26,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const shortcut = this.el.nativeElement.getAttribute('data-shortcut');
+    const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
     const buttonText = this.el.nativeElement.innerText;
     const shortcutKey = shortcut.replace(/[()\[\]{}]/g, '');
     this.shortcutSpan = this.renderer.createElement('span');
