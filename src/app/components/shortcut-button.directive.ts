@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs';
 export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   private subscription!: Subscription;
   private shortcutSpan!: HTMLElement;
+  private shortcutKey: string = '';
+  private buttonText: string = '';
 
   constructor(
     private el: ElementRef,
@@ -27,21 +29,21 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-    let buttonText = this.el.nativeElement.innerText;
-    const shortcutKey = (
+    this.buttonText = this.el.nativeElement.innerText;
+    this.shortcutKey = (
       shortcut?.replace(/[()\[\]{}]/g, '') || ''
     ).toLowerCase();
 
-    if (buttonText.toLowerCase().includes(shortcutKey)) {
-      const index = buttonText.toLowerCase().indexOf(shortcutKey);
-      const before = buttonText.substring(0, index);
-      const after = buttonText.substring(index + 1);
+    if (this.buttonText.toLowerCase().includes(this.shortcutKey)) {
+      const index = this.buttonText.toLowerCase().indexOf(this.shortcutKey);
+      const before = this.buttonText.substring(0, index);
+      const after = this.buttonText.substring(index + 1);
       this.shortcutSpan = this.renderer.createElement('span');
 
       this.renderer.setProperty(
         this.shortcutSpan,
         'innerText',
-        buttonText[index]
+        this.buttonText[index]
       );
       this.renderer.addClass(
         this.shortcutSpan,
@@ -65,7 +67,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       this.renderer.setProperty(
         this.shortcutSpan,
         'innerText',
-        `[${shortcutKey.toUpperCase()}] `
+        `[  ${this.shortcutKey.toUpperCase()}  ] `
       );
       this.renderer.addClass(
         this.shortcutSpan,
@@ -79,7 +81,10 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
     }
 
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
-      if (keyInfo === this.getShortcutString(shortcut)) {
+      console.log(keyInfo);
+      if (
+        keyInfo.toLowerCase() === this.getShortcutString(shortcut.toLowerCase())
+      ) {
         this.el.nativeElement.click();
       }
     });
@@ -88,7 +93,6 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-    let buttonText = this.el.nativeElement.innerText;
     const shortcutClass = this.getShortcutClass(shortcut || '');
 
     if (this.shortcutSpan) {
@@ -101,7 +105,11 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       ) {
         event.preventDefault();
         this.renderer.addClass(this.shortcutSpan, 'active');
-        if (!buttonText.includes(shortcut)) {
+        if (
+          !this.buttonText
+            .toLowerCase()
+            .includes(this.shortcutKey.toLowerCase())
+        ) {
           this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
         }
       }
@@ -111,10 +119,12 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent): void {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-    let buttonText = this.el.nativeElement.innerText;
+    let buttonText = this.el.nativeElement.innerText.substring(7);
     if (this.shortcutSpan) {
       this.renderer.removeClass(this.shortcutSpan, 'active');
-      if (!buttonText.includes(shortcut)) {
+      if (
+        !this.buttonText.toLowerCase().includes(this.shortcutKey.toLowerCase())
+      ) {
         this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
       }
     }
@@ -129,11 +139,11 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
 
   private getShortcutString(shortcut: string): string {
     if (shortcut.startsWith('('))
-      return 'Ctrl ' + shortcut.replace(/[()]/g, '');
+      return 'ctrl ' + shortcut.replace(/[()]/g, '');
     if (shortcut.startsWith('['))
-      return 'Alt ' + shortcut.replace(/[\[\]]/g, '');
+      return 'alt ' + shortcut.replace(/[\[\]]/g, '');
     if (shortcut.startsWith('{'))
-      return 'Ctrl Alt ' + shortcut.replace(/[{}]/g, '');
+      return 'ctrl alt ' + shortcut.replace(/[{}]/g, '');
     return '';
   }
 

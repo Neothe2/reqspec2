@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Client</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">Close</ion-button>
+      <ion-button (click)="dismiss()" keyboard-shortcut="[c]">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,7 +13,9 @@
         <ion-label position="floating">Name</ion-label>
         <ion-input formControlName="name" type="text"></ion-input>
       </ion-item>
-      <ion-button expand="block" (click)="addClient()">OK</ion-button>
+      <ion-button expand="block" (click)="addClient()" keyboard-shortcut="[O]"
+        >OK</ion-button
+      >
     </form>
   </ion-list>
 </ion-content>

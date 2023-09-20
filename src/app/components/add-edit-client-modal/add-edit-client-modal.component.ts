@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController, NavParams } from '@ionic/angular';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-add-edit-client-modal',
@@ -13,7 +14,8 @@ export class AddEditClientModalComponent {
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private shortcutService: ShortcutService
   ) {
     this.clientForm = this.formBuilder.group({
       name: [''],

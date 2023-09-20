@@ -3,6 +3,7 @@ import { HttpService } from '../services/http/http.service';
 import { AddEditClientModalComponent } from '../components/add-edit-client-modal/add-edit-client-modal.component';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ShortcutService } from '../services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-clients',
@@ -16,7 +17,8 @@ export class ClientsPage implements OnInit {
     private http: HttpService,
     private modalController: ModalController,
     private actionSheetController: ActionSheetController,
-    private router: Router
+    private router: Router,
+    private shortcutService: ShortcutService
   ) {
     this.getClients();
   }
