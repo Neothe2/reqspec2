@@ -58,6 +58,24 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
         this.el.nativeElement,
         this.renderer.createText(after)
       );
+    } else {
+      // If the shortcut letter doesn't exist in the button text
+      this.shortcutSpan = this.renderer.createElement('span');
+      this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+      this.renderer.setProperty(
+        this.shortcutSpan,
+        'innerText',
+        `[${shortcutKey.toUpperCase()}] `
+      );
+      this.renderer.addClass(
+        this.shortcutSpan,
+        this.getShortcutClass(shortcut || '')
+      );
+      this.renderer.insertBefore(
+        this.el.nativeElement,
+        this.shortcutSpan,
+        this.el.nativeElement.firstChild
+      );
     }
 
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
@@ -70,6 +88,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    let buttonText = this.el.nativeElement.innerText;
     const shortcutClass = this.getShortcutClass(shortcut || '');
 
     if (this.shortcutSpan) {
@@ -82,14 +101,22 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       ) {
         event.preventDefault();
         this.renderer.addClass(this.shortcutSpan, 'active');
+        if (!buttonText.includes(shortcut)) {
+          this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
+        }
       }
     }
   }
 
   @HostListener('document:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent): void {
+    const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    let buttonText = this.el.nativeElement.innerText;
     if (this.shortcutSpan) {
       this.renderer.removeClass(this.shortcutSpan, 'active');
+      if (!buttonText.includes(shortcut)) {
+        this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+      }
     }
   }
 
