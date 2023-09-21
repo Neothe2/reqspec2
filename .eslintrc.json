@@ -41,6 +41,13 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
+    },
+    {
+      "files": ["main.js"], // or wherever your Electron main file is
+      "parserOptions": {
+        "ecmaVersion": 2018 // or whatever version you want to target
+      }
+      // you can add rules here that apply only to your Electron main file
     }
   ]
 }
