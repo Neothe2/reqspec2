@@ -15,7 +15,7 @@ declare global {
   providedIn: 'root',
 })
 export class HttpService {
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://info.dhwana.com:100';
   private isElectron: boolean;
 
   constructor(
@@ -125,7 +125,7 @@ export class HttpService {
   }
 
   delete(url: string) {
-    const access = this.cookieService.get('access');
+    const access = this.getCookie('access');
     const headers = new HttpHeaders().set('Authorization', `JWT ${access}`);
     return this.http.delete(`${this.baseUrl}/${url}`, { headers }).toPromise();
   }
