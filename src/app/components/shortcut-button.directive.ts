@@ -55,11 +55,21 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
             this.focusOnElement();
 
             // Manually trigger the focus and blur events to get the desired visual effect
-            this.listItems![this.focusedElementIndex].blur();
-            this.listItems![this.focusedElementIndex].focus();
+            // this.listItems![this.focusedElementIndex].blur();
+            // this.listItems![this.focusedElementIndex].focus();
           }
         }
       );
+    } else if (tagName === 'ion-accordion') {
+      // Logic for ion-accordion
+      let accordionHeader =
+        this.el.nativeElement.querySelector('.accordion-header');
+      this.addShortcutToAccordionHeader(accordionHeader);
+      const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+      this.buttonText = this.el.nativeElement.innerText;
+      this.shortcutKey = (
+        shortcut?.replace(/[()\[\]{}]/g, '') || ''
+      ).toLowerCase();
     } else {
       const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
       this.buttonText = this.el.nativeElement.innerText;
@@ -112,18 +122,31 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           this.el.nativeElement.firstChild
         );
       }
-
-      this.subscription = this.shortcutService.shortcut$.subscribe(
-        (keyInfo) => {
-          console.log(keyInfo);
-          if (
-            keyInfo.toLowerCase() ===
-            this.getShortcutString(shortcut.toLowerCase())
-          ) {
-            this.el.nativeElement.click();
-          }
+    }
+    this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
+      console.log(keyInfo);
+      const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+      let shortcutString = this.getShortcutString(shortcut.toLowerCase());
+      if (
+        keyInfo.toLowerCase() == this.getShortcutString(shortcut.toLowerCase())
+      ) {
+        if (tagName == 'ion-button' || tagName == 'button') {
+          this.el.nativeElement.click();
         }
-      );
+        if (tagName == 'ion-accordion') {
+          this.toggleAccordion();
+        }
+      }
+    });
+  }
+
+  private toggleAccordion(): void {
+    const accordion = this.el.nativeElement;
+    const isOpen = accordion.getAttribute('expanded') === 'true'; // Replace with the actual attribute that indicates if the accordion is open
+    if (isOpen) {
+      accordion.setAttribute('expanded', 'false'); // Replace with the actual method to close the accordion
+    } else {
+      accordion.setAttribute('expanded', 'true'); // Replace with the actual method to open the accordion
     }
   }
 
@@ -132,6 +155,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
     const shortcutKey = (
       shortcut?.replace(/[()\[\]{}]/g, '') || ''
     ).toUpperCase();
+    this.shortcutKey = shortcutKey;
     const shortcutSpan = this.renderer.createElement('span');
     this.renderer.setProperty(shortcutSpan, 'innerText', `[${shortcutKey}]`);
     this.renderer.addClass(shortcutSpan, 'hidden-shortcut');
@@ -175,28 +199,47 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       }
 
       if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
-        this.focusOnElement();
-      } else if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        this.focusedElementIndex = Math.min(
-          this.listItems!.length - 1,
-          this.focusedElementIndex + 1
-        );
-        this.focusOnElement();
-      } else if (event.key === 'Enter' && this.focusedElementIndex >= 0) {
-        if (this.isFocusedElementInList()) {
-          event.preventDefault();
-          this.listItems![this.focusedElementIndex].click();
-        }
-      } else if (event.key === 'Tab' && event.shiftKey) {
         if (!actionSheetOpen) {
+          event.preventDefault();
           this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
           this.focusOnElement();
         }
-      } else if (event.key === 'Tab' && !event.shiftKey) {
+      } else if (event.key === 'ArrowDown') {
         if (!actionSheetOpen) {
+          event.preventDefault();
+
+          this.focusedElementIndex = Math.min(
+            this.listItems!.length - 1,
+            this.focusedElementIndex + 1
+          );
+          this.focusOnElement();
+        }
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+
+        // Get the focused element within the ion-item
+        const focusedButton =
+          this.listItems![this.focusedElementIndex].querySelector('ion-button');
+
+        // Check if the focused element is the same as the element at the selected index
+        if (document.activeElement === focusedButton) {
+          this.listItems![this.focusedElementIndex].click();
+        }
+      } else if (event.key === 'Tab' && event.shiftKey) {
+        if (
+          !actionSheetOpen &&
+          this.isFocusedElementInList() &&
+          !(this.focusedElementIndex == 0)
+        ) {
+          this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
+          this.focusOnElement();
+        }
+      } else if (
+        event.key === 'Tab' &&
+        !event.shiftKey &&
+        !(this.focusedElementIndex == this.listItems!.length - 1)
+      ) {
+        if (!actionSheetOpen && this.isFocusedElementInList()) {
           this.focusedElementIndex = Math.min(
             this.listItems!.length - 1,
             this.focusedElementIndex + 1
@@ -205,6 +248,17 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
         }
       }
     }
+  }
+
+  private addShortcutToAccordionHeader(accordionHeader: HTMLElement): void {
+    const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    const shortcutKey = (
+      shortcut?.replace(/[()\[\]{}]/g, '') || ''
+    ).toUpperCase();
+    const shortcutSpan = this.renderer.createElement('span');
+    this.renderer.setProperty(shortcutSpan, 'innerText', `[${shortcutKey}]`);
+    this.renderer.addClass(shortcutSpan, 'hidden-shortcut');
+    this.renderer.appendChild(accordionHeader, shortcutSpan);
   }
 
   @HostListener('document:keyup', ['$event'])
@@ -230,6 +284,10 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           item.blur();
           setTimeout(() => {
             item.focus();
+            item.blur();
+            setTimeout(() => {
+              item.focus();
+            }, 0);
           }, 0);
         } else {
           this.renderer.removeClass(item, 'focused');
