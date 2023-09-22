@@ -41,6 +41,25 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       this.cardHeader = this.el.nativeElement.querySelector('ion-card-header');
       this.cardListItems = this.el.nativeElement.querySelectorAll('ion-item');
       this.addShortcutToCardHeader();
+
+      // Subscribe to the shortcut observable
+      this.subscription = this.shortcutService.shortcut$.subscribe(
+        (keyInfo) => {
+          const shortcut =
+            this.el.nativeElement.getAttribute('keyboard-shortcut');
+          if (
+            keyInfo.toLowerCase() ===
+            this.getShortcutString(shortcut.toLowerCase())
+          ) {
+            this.focusedElementIndex = 0; // Focus on the first element
+            this.focusOnElement();
+
+            // Manually trigger the focus and blur events to get the desired visual effect
+            this.listItems![this.focusedElementIndex].blur();
+            this.listItems![this.focusedElementIndex].focus();
+          }
+        }
+      );
     } else {
       const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
       this.buttonText = this.el.nativeElement.innerText;
@@ -163,8 +182,25 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
         );
         this.focusOnElement();
       } else if (event.key === 'Enter' && this.focusedElementIndex >= 0) {
+        if (this.isFocusedElementInList()) {
+          event.preventDefault();
+          this.listItems![this.focusedElementIndex].click();
+        }
+      } else if (event.key === 'Tab' && event.shiftKey) {
         event.preventDefault();
-        this.listItems![this.focusedElementIndex].click();
+        if (this.isFocusedElementInList()) {
+          this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
+          this.focusOnElement();
+        }
+      } else if (event.key === 'Tab' && !event.shiftKey) {
+        if (this.isFocusedElementInList()) {
+          this.focusedElementIndex = Math.min(
+            this.listItems!.length - 1,
+            this.focusedElementIndex + 1
+          );
+          this.focusOnElement();
+        }
+        event.preventDefault();
       }
     }
   }
@@ -188,12 +224,33 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       this.listItems.forEach((item, index) => {
         if (index === this.focusedElementIndex) {
           this.renderer.addClass(item, 'focused');
-          item.focus();
+          this.renderer.setAttribute(item, 'tabindex', '0');
+          item.blur();
+          setTimeout(() => {
+            item.focus();
+          }, 0);
         } else {
           this.renderer.removeClass(item, 'focused');
+          this.renderer.removeAttribute(item, 'tabindex');
         }
       });
     }
+  }
+
+  private isFocusedElementInList(): boolean {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (this.listItems && focusedElement) {
+      let listItems = Array.from(this.listItems);
+      for (let listItem of listItems) {
+        if (
+          listItem.querySelector('ion-buttons')?.querySelector('ion-button') ==
+          focusedElement
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private getShortcutClass(shortcut: string): string {

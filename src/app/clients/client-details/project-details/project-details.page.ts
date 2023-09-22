@@ -5,6 +5,7 @@ import { AddEditActorModalComponent } from 'src/app/components/add-edit-actor-mo
 import { AddEditStaffModalComponent } from 'src/app/components/add-edit-staff-modal/add-edit-staff-modal.component';
 import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-project-details',
@@ -25,7 +26,8 @@ export class ProjectDetailsPage implements OnInit {
     private http: HttpService,
     private modalController: ModalController,
     private actionSheetController: ActionSheetController,
-    private router: Router
+    private router: Router,
+    private shortcutService: ShortcutService
   ) {}
 
   ngOnInit() {
