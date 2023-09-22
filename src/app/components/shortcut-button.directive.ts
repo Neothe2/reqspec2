@@ -166,6 +166,10 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       }
     } else if (tagName === 'ion-card') {
       // Logic for list items
+
+      let actionSheet = document.querySelector('ion-action-sheet');
+      let actionSheetOpen = actionSheet ? true : false;
+
       if (!this.listItems) {
         this.listItems = this.el.nativeElement.querySelectorAll('ion-item');
       }
@@ -187,20 +191,18 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           this.listItems![this.focusedElementIndex].click();
         }
       } else if (event.key === 'Tab' && event.shiftKey) {
-        event.preventDefault();
-        if (this.isFocusedElementInList()) {
+        if (!actionSheetOpen) {
           this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
           this.focusOnElement();
         }
       } else if (event.key === 'Tab' && !event.shiftKey) {
-        if (this.isFocusedElementInList()) {
+        if (!actionSheetOpen) {
           this.focusedElementIndex = Math.min(
             this.listItems!.length - 1,
             this.focusedElementIndex + 1
           );
           this.focusOnElement();
         }
-        event.preventDefault();
       }
     }
   }
