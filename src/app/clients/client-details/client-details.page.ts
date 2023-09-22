@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddEditProjectModalComponent } from 'src/app/components/add-edit-project-modal/add-edit-project-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-client-details',
@@ -18,7 +19,8 @@ export class ClientDetailsPage implements OnInit {
     private http: HttpService,
     private actionSheetController: ActionSheetController,
     private modalController: ModalController,
-    private router: Router
+    private router: Router,
+    private shortcut: ShortcutService
   ) {}
 
   ngOnInit() {

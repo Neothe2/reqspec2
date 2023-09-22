@@ -15,7 +15,7 @@ declare global {
   providedIn: 'root',
 })
 export class HttpService {
-  private baseUrl = 'https://info.dhwana.com:100';
+  private baseUrl = 'http://127.0.0.1:8000';
   private isElectron: boolean;
 
   constructor(

@@ -58,3 +58,11 @@
 .hidden-shortcut {
   display: none;
 }
+
+.focused {
+  background-color: #ff2d2d;
+}
+
+.hidden-shortcut {
+  visibility: hidden;
+}
