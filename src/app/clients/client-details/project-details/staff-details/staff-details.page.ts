@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddEditStaffModalComponent } from 'src/app/components/add-edit-staff-modal/add-edit-staff-modal.component';
 import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 import { AssociateActorModalComponent } from 'src/app/components/associate-actor-modal/associate-actor-modal.component';
 import { AssociateStaffModalComponent } from 'src/app/components/associate-staff-modal/associate-staff-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-staff-details',
@@ -25,7 +26,9 @@ export class StaffDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpService,
     private actionSheetController: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private shortcutService: ShortcutService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -82,6 +85,13 @@ export class StaffDetailsPage implements OnInit {
           )
           .then((associatedActors: any) => {
             this.actors = associatedActors;
+            // gets associated user stories
+            this.userStories = [];
+            for (let actor of this.actors) {
+              for (let user_story of actor.user_stories) {
+                this.userStories.push(user_story);
+              }
+            }
           });
       });
   }
@@ -114,7 +124,11 @@ export class StaffDetailsPage implements OnInit {
     return await modal.present();
   }
 
-  navigateToDetailUserStory(userStory: any) {}
+  navigateToDetailUserStory(userStory: any) {
+    this.router.navigateByUrl(
+      `clients/detail/${this.clientId}/project-details/${this.projectId}/actor-details/${userStory.actor}/userstory-details/${userStory.id}`
+    );
+  }
 
   async onEditUserStory(userStory: any) {
     const modal = await this.modalController.create({

@@ -7,7 +7,7 @@ import {
   HostListener,
   AfterViewInit,
 } from '@angular/core';
-import { ShortcutService } from '../services/shortcut/shortcut.service';
+import { ShortcutService } from '../../services/shortcut/shortcut.service';
 import { Subscription } from 'rxjs';
 
 @Directive({
@@ -62,8 +62,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
       );
     } else if (tagName === 'ion-accordion') {
       // Logic for ion-accordion
-      let accordionHeader =
-        this.el.nativeElement.querySelector('.accordion-header');
+      let accordionHeader = this.el.nativeElement.querySelector('ion-item');
       this.addShortcutToAccordionHeader(accordionHeader);
       const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
       this.buttonText = this.el.nativeElement.innerText;
@@ -142,11 +141,13 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
 
   private toggleAccordion(): void {
     const accordion = this.el.nativeElement;
-    const isOpen = accordion.getAttribute('expanded') === 'true'; // Replace with the actual attribute that indicates if the accordion is open
+    const isOpen = accordion.getAttribute('accordion-expanded') === 'true'; // Replace with the actual attribute that indicates if the accordion is open
     if (isOpen) {
-      accordion.setAttribute('expanded', 'false'); // Replace with the actual method to close the accordion
+      accordion.setAttribute('accordion-expanded', 'false'); // Replace with the actual method to close the accordion
+      accordion.setAttribute('accordion-collapsed', 'true'); // Replace with the actual method to close the accordion
     } else {
-      accordion.setAttribute('expanded', 'true'); // Replace with the actual method to open the accordion
+      accordion.setAttribute('accordion-collapsed', 'false'); // Replace with the actual method to close the accordion
+      accordion.setAttribute('accordion-expanded', 'true'); // Replace with the actual method to close the accordion
     }
   }
 
@@ -247,6 +248,15 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           this.focusOnElement();
         }
       }
+    } else if (tagName === 'ion-accordion') {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        // Add any additional logic here if needed
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        // Add any additional logic here if needed
+      }
     }
   }
 
@@ -284,10 +294,10 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           item.blur();
           setTimeout(() => {
             item.focus();
-            item.blur();
-            setTimeout(() => {
-              item.focus();
-            }, 0);
+            // item.blur();
+            // setTimeout(() => {
+            //   item.focus();
+            // }, 0);
           }, 0);
         } else {
           this.renderer.removeClass(item, 'focused');

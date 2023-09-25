@@ -5,6 +5,7 @@ import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edi
 import { AssociateActorModalComponent } from 'src/app/components/associate-actor-modal/associate-actor-modal.component';
 import { AssociateUseCaseModalComponent } from 'src/app/components/associate-use-case-modal/associate-use-case-modal.component';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-userstory-details',
@@ -24,7 +25,8 @@ export class UserstoryDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpService,
     private actionSheetController: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private shortcutService: ShortcutService
   ) {}
 
   ngOnInit() {

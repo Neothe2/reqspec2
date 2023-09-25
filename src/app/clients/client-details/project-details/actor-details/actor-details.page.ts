@@ -6,6 +6,7 @@ import { AddEditStaffModalComponent } from '../../../../components/add-edit-staf
 import { AssociateStaffModalComponent } from 'src/app/components/associate-staff-modal/associate-staff-modal.component';
 import { AddEditUserstoryFromProjectComponent } from 'src/app/components/add-edit-userstory-from-project/add-edit-userstory-from-project.component';
 import { AddEditUseCaseModalComponent } from 'src/app/components/add-edit-use-case-modal/add-edit-use-case-modal.component';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-actor-details',
@@ -28,7 +29,8 @@ export class ActorDetailsPage implements OnInit {
     private http: HttpService,
     private actionSheetController: ActionSheetController,
     private modalController: ModalController,
-    private router: Router
+    private router: Router,
+    private shortCutService: ShortcutService
   ) {}
 
   ngOnInit() {

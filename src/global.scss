@@ -63,6 +63,18 @@
   // border: 2px solid black;
 }
 
+ion-item:focus {
+  border-bottom: 2px solid black !important;
+}
+
 .hidden-shortcut {
   visibility: hidden;
+}
+
+/* Using !important to ensure the styles are applied */
+.item-lines-full {
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Add any other properties that you want to reset */
 }
