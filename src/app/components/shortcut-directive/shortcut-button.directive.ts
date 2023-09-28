@@ -181,13 +181,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
     const tagName = this.el.nativeElement.tagName.toLowerCase();
-    if (
-      tagName === 'button' ||
-      tagName == 'ion-button' ||
-      tagName == 'ion-item'
-    ) {
-      this.shortcutClass.handleKeyDown(event);
-    } else if (tagName === 'ion-card') {
+    if (tagName === 'ion-card') {
       // Logic for list items
 
       let actionSheet = document.querySelector('ion-action-sheet');
@@ -255,6 +249,8 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
         event.preventDefault();
         // Add any additional logic here if needed
       }
+    } else {
+      this.shortcutClass.handleKeyDown(event);
     }
   }
 
@@ -274,9 +270,7 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
     let buttonText = this.el.nativeElement.innerText.substring(7);
     const tagName = this.el.nativeElement.tagName.toLowerCase();
-    if (tagName == 'ion-button' || tagName == 'ion-item') {
-      this.shortcutClass.handleKeyUp(event);
-    } else {
+    if (!(tagName == 'ion-button' || tagName == 'ion-item')) {
       if (this.shortcutSpan) {
         this.renderer.removeClass(this.shortcutSpan, 'active');
         if (
@@ -287,6 +281,8 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
           this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
         }
       }
+    } else {
+      this.shortcutClass.handleKeyUp(event);
     }
   }
 

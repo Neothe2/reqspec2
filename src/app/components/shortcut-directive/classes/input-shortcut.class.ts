@@ -68,7 +68,22 @@ export class InputShortcut implements ShortcutClass {
       this.renderer.appendChild(labelElem, this.shortcutSpan);
       this.renderer.appendChild(labelElem, this.renderer.createText(after));
     } else {
-      // Add a hidden label before the input if the shortcut letter doesn't exist in the label text
+      //   // Add a hidden label before the input if the shortcut letter doesn't exist in the label text
+      //   this.shortcutSpan = this.renderer.createElement('span');
+      //   this.renderer.setProperty(
+      //     this.shortcutSpan,
+      //     'innerText',
+      //     `[  ${this.shortcutKey.toUpperCase()}  ] `
+      //   );
+      //   this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
+      //   this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+      //   this.renderer.insertBefore(
+      //     this.el.nativeElement.parentNode,
+      //     this.shortcutSpan,
+      //     this.el.nativeElement
+      //   );
+      // If the shortcut letter exists in the label text, underline it
+      const after = labelText;
       this.shortcutSpan = this.renderer.createElement('span');
       this.renderer.setProperty(
         this.shortcutSpan,
@@ -77,11 +92,9 @@ export class InputShortcut implements ShortcutClass {
       );
       this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
       this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-      this.renderer.insertBefore(
-        this.el.nativeElement.parentNode,
-        this.shortcutSpan,
-        this.el.nativeElement
-      );
+      this.renderer.setProperty(labelElem, 'innerHTML', '');
+      this.renderer.appendChild(labelElem, this.shortcutSpan);
+      this.renderer.appendChild(labelElem, this.renderer.createText(after));
     }
   }
 
@@ -120,7 +133,7 @@ export class InputShortcut implements ShortcutClass {
           event.ctrlKey &&
           event.altKey)
       ) {
-        event.preventDefault();
+        // event.preventDefault();
         this.renderer.addClass(this.shortcutSpan, 'active');
         if (!this.keyInLabel) {
           this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
@@ -130,7 +143,7 @@ export class InputShortcut implements ShortcutClass {
   }
 
   handleKeyUp(event: KeyboardEvent): void {
-    event.preventDefault();
+    // event.preventDefault();
     this.renderer.removeClass(this.shortcutSpan, 'active');
     if (!this.keyInLabel) {
       this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
