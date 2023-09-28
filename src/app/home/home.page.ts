@@ -31,6 +31,7 @@ export class HomePage {
   }
 
   hello() {
-    console.log('Hello!');
+    let text = (document.getElementById('input') as HTMLInputElement).value;
+    console.log(text);
   }
 }

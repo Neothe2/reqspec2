@@ -11,6 +11,7 @@ export class InputShortcut implements ShortcutClass {
   shortcutKey: any;
   shortcutSpan: any;
   subscription: any;
+  keyInLabel: boolean = false;
 
   constructor(
     el: ElementRef,
@@ -24,6 +25,7 @@ export class InputShortcut implements ShortcutClass {
   afterViewInit(): void {
     this.ionInput = this.ionInput =
       this.el.nativeElement.querySelector('ion-input');
+    console.log(this.ionInput);
     this.getShortcut();
     this.createSubscription();
     this.addShortcutToHeader();
@@ -31,12 +33,14 @@ export class InputShortcut implements ShortcutClass {
 
   createSubscription() {
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
-      console.log(keyInfo.toLowerCase());
       let shortcutString = this.getShortcutString();
-      console.log(shortcutString.toLowerCase());
-      if (keyInfo.toLowerCase() == shortcutString.toLowerCase()) {
+      if (keyInfo.toLowerCase() === shortcutString.toLowerCase()) {
         if (this.ionInput) {
-          this.ionInput.focus();
+          const nativeInput = this.ionInput.querySelector('input');
+          //   console.log(nativeInput);
+          if (nativeInput) {
+            nativeInput.focus();
+          }
         }
       }
     });
@@ -47,16 +51,18 @@ export class InputShortcut implements ShortcutClass {
     let labelText = labelElem ? labelElem.innerText : '';
 
     if (labelText.toLowerCase().includes(this.shortcutKey)) {
+      this.keyInLabel = true;
       // If the shortcut letter exists in the label text, underline it
       const index = labelText.toLowerCase().indexOf(this.shortcutKey);
       const before = labelText.substring(0, index);
       const after = labelText.substring(index + 1);
-      this.shortcutSpan = this.renderer.createElement('u');
+      this.shortcutSpan = this.renderer.createElement('span');
       this.renderer.setProperty(
         this.shortcutSpan,
         'innerText',
         labelText[index]
       );
+      this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
       this.renderer.setProperty(labelElem, 'innerHTML', '');
       this.renderer.appendChild(labelElem, this.renderer.createText(before));
       this.renderer.appendChild(labelElem, this.shortcutSpan);
@@ -87,9 +93,9 @@ export class InputShortcut implements ShortcutClass {
   }
 
   getShortcutClass(): string {
-    if (this.shortcut.startsWith('(')) return 'ctrl-shortcut-input';
-    if (this.shortcut.startsWith('[')) return 'alt-shortcut-input';
-    if (this.shortcut.startsWith('{')) return 'ctrl-alt-shortcut-input';
+    if (this.shortcut.startsWith('(')) return 'ctrl-shortcut-button';
+    if (this.shortcut.startsWith('[')) return 'alt-shortcut-button';
+    if (this.shortcut.startsWith('{')) return 'ctrl-alt-shortcut-button';
     return '';
   }
 
@@ -108,19 +114,25 @@ export class InputShortcut implements ShortcutClass {
 
     if (this.shortcutSpan) {
       if (
-        (shortcutClass === 'ctrl-shortcut-input' && event.ctrlKey) ||
-        (shortcutClass === 'alt-shortcut-input' && event.altKey) ||
-        (shortcutClass === 'ctrl-alt-shortcut-input' &&
+        (shortcutClass === 'ctrl-shortcut-button' && event.ctrlKey) ||
+        (shortcutClass === 'alt-shortcut-button' && event.altKey) ||
+        (shortcutClass === 'ctrl-alt-shortcut-button' &&
           event.ctrlKey &&
           event.altKey)
       ) {
-        this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
+        event.preventDefault();
+        this.renderer.addClass(this.shortcutSpan, 'active');
+        if (!this.keyInLabel) {
+          this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
+        }
       }
     }
   }
 
   handleKeyUp(event: KeyboardEvent): void {
-    if (this.shortcutSpan) {
+    event.preventDefault();
+    this.renderer.removeClass(this.shortcutSpan, 'active');
+    if (!this.keyInLabel) {
       this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
     }
   }
