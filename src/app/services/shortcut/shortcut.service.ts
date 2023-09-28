@@ -27,9 +27,8 @@ export class ShortcutService {
         }
 
         keyInfo += event.key;
+        this.shortcutSubject.next(keyInfo);
       }
     }
-
-    this.shortcutSubject.next(keyInfo);
   }
 }

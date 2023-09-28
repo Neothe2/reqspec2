@@ -5,7 +5,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-button id="hello" keyboard-shortcut="[f]" (click)="hello()"
+  <ion-button id="hello" keyboard-shortcut="[h]" (click)="hello()"
     >Hello!</ion-button
   >
+  <ion-item keyboard-shortcut="[I]">
+    <ion-label position="floating">Input</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
 </ion-content>

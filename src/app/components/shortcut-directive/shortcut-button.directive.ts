@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { ShortcutService } from '../../services/shortcut/shortcut.service';
 import { Subscription } from 'rxjs';
+import { ShortcutClass } from './interface/shortcutClass.interface';
+import { ShortcutClassFactory } from './classes/shortcut-class-factory';
 
 @Directive({
   selector: '[keyboard-shortcut]',
@@ -24,6 +26,8 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
 
   private cardHeader!: HTMLElement;
   private cardListItems: NodeListOf<HTMLElement> | null = null;
+
+  private shortcutClass!: ShortcutClass;
 
   constructor(
     private el: ElementRef,
@@ -70,68 +74,79 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
         shortcut?.replace(/[()\[\]{}]/g, '') || ''
       ).toLowerCase();
     } else {
-      const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-      this.buttonText = this.el.nativeElement.innerText;
-      this.shortcutKey = (
-        shortcut?.replace(/[()\[\]{}]/g, '') || ''
-      ).toLowerCase();
-
-      if (this.buttonText.toLowerCase().includes(this.shortcutKey)) {
-        const index = this.buttonText.toLowerCase().indexOf(this.shortcutKey);
-        const before = this.buttonText.substring(0, index);
-        const after = this.buttonText.substring(index + 1);
-        this.shortcutSpan = this.renderer.createElement('span');
-
-        this.renderer.setProperty(
-          this.shortcutSpan,
-          'innerText',
-          this.buttonText[index]
-        );
-        this.renderer.addClass(
-          this.shortcutSpan,
-          this.getShortcutClass(shortcut || '')
-        );
-
-        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', '');
-        this.renderer.appendChild(
-          this.el.nativeElement,
-          this.renderer.createText(before)
-        );
-        this.renderer.appendChild(this.el.nativeElement, this.shortcutSpan);
-        this.renderer.appendChild(
-          this.el.nativeElement,
-          this.renderer.createText(after)
-        );
-      } else {
-        // If the shortcut letter doesn't exist in the button text
-        this.shortcutSpan = this.renderer.createElement('span');
-        this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-        this.renderer.setProperty(
-          this.shortcutSpan,
-          'innerText',
-          `[  ${this.shortcutKey.toUpperCase()}  ] `
-        );
-        this.renderer.addClass(
-          this.shortcutSpan,
-          this.getShortcutClass(shortcut || '')
-        );
-        this.renderer.insertBefore(
-          this.el.nativeElement,
-          this.shortcutSpan,
-          this.el.nativeElement.firstChild
-        );
+      let shortcutFactory = new ShortcutClassFactory();
+      let shortcutClass = shortcutFactory.createShortcutClass(
+        tagName,
+        this.el,
+        this.renderer,
+        this.shortcutService
+      );
+      if (shortcutClass) {
+        this.shortcutClass = shortcutClass;
+        this.shortcutClass.afterViewInit();
       }
+
+      // const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+      // this.buttonText = this.el.nativeElement.innerText;
+      // this.shortcutKey = (
+      //   shortcut?.replace(/[()\[\]{}]/g, '') || ''
+      // ).toLowerCase();
+
+      // if (this.buttonText.toLowerCase().includes(this.shortcutKey)) {
+      //   const index = this.buttonText.toLowerCase().indexOf(this.shortcutKey);
+      //   const before = this.buttonText.substring(0, index);
+      //   const after = this.buttonText.substring(index + 1);
+      //   this.shortcutSpan = this.renderer.createElement('span');
+
+      //   this.renderer.setProperty(
+      //     this.shortcutSpan,
+      //     'innerText',
+      //     this.buttonText[index]
+      //   );
+      //   this.renderer.addClass(
+      //     this.shortcutSpan,
+      //     this.getShortcutClass(shortcut || '')
+      //   );
+
+      //   this.renderer.setProperty(this.el.nativeElement, 'innerHTML', '');
+      //   this.renderer.appendChild(
+      //     this.el.nativeElement,
+      //     this.renderer.createText(before)
+      //   );
+      //   this.renderer.appendChild(this.el.nativeElement, this.shortcutSpan);
+      //   this.renderer.appendChild(
+      //     this.el.nativeElement,
+      //     this.renderer.createText(after)
+      //   );
+      // } else {
+      //   // If the shortcut letter doesn't exist in the button text
+      //   this.shortcutSpan = this.renderer.createElement('span');
+      //   this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+      //   this.renderer.setProperty(
+      //     this.shortcutSpan,
+      //     'innerText',
+      //     `[  ${this.shortcutKey.toUpperCase()}  ] `
+      //   );
+      //   this.renderer.addClass(
+      //     this.shortcutSpan,
+      //     this.getShortcutClass(shortcut || '')
+      //   );
+      //   this.renderer.insertBefore(
+      //     this.el.nativeElement,
+      //     this.shortcutSpan,
+      //     this.el.nativeElement.firstChild
+      //   );
+      // }
     }
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
-      console.log(keyInfo);
       const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
       let shortcutString = this.getShortcutString(shortcut.toLowerCase());
       if (
         keyInfo.toLowerCase() == this.getShortcutString(shortcut.toLowerCase())
       ) {
-        if (tagName == 'ion-button' || tagName == 'button') {
-          this.el.nativeElement.click();
-        }
+        // if (tagName == 'ion-button' || tagName == 'button') {
+        //   this.el.nativeElement.click();
+        // }
         if (tagName == 'ion-accordion') {
           this.toggleAccordion();
         }
@@ -166,29 +181,12 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
     const tagName = this.el.nativeElement.tagName.toLowerCase();
-    if (tagName === 'button' || tagName == 'ion-button') {
-      const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-      const shortcutClass = this.getShortcutClass(shortcut || '');
-
-      if (this.shortcutSpan) {
-        if (
-          (shortcutClass === 'ctrl-shortcut-button' && event.ctrlKey) ||
-          (shortcutClass === 'alt-shortcut-button' && event.altKey) ||
-          (shortcutClass === 'ctrl-alt-shortcut-button' &&
-            event.ctrlKey &&
-            event.altKey)
-        ) {
-          event.preventDefault();
-          this.renderer.addClass(this.shortcutSpan, 'active');
-          if (
-            !this.buttonText
-              .toLowerCase()
-              .includes(this.shortcutKey.toLowerCase())
-          ) {
-            this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
-          }
-        }
-      }
+    if (
+      tagName === 'button' ||
+      tagName == 'ion-button' ||
+      tagName == 'ion-item'
+    ) {
+      this.shortcutClass.handleKeyDown(event);
     } else if (tagName === 'ion-card') {
       // Logic for list items
 
@@ -275,12 +273,19 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
   handleKeyUp(event: KeyboardEvent): void {
     const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
     let buttonText = this.el.nativeElement.innerText.substring(7);
-    if (this.shortcutSpan) {
-      this.renderer.removeClass(this.shortcutSpan, 'active');
-      if (
-        !this.buttonText.toLowerCase().includes(this.shortcutKey.toLowerCase())
-      ) {
-        this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+    const tagName = this.el.nativeElement.tagName.toLowerCase();
+    if (tagName == 'ion-button' || tagName == 'ion-item') {
+      this.shortcutClass.handleKeyUp(event);
+    } else {
+      if (this.shortcutSpan) {
+        this.renderer.removeClass(this.shortcutSpan, 'active');
+        if (
+          !this.buttonText
+            .toLowerCase()
+            .includes(this.shortcutKey.toLowerCase())
+        ) {
+          this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+        }
       }
     }
   }
@@ -342,5 +347,6 @@ export class ShortcutButtonDirective implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.shortcutClass.onDestroy();
   }
 }
