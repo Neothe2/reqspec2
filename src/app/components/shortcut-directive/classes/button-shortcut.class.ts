@@ -75,7 +75,7 @@ export class ButtonShortcut implements ShortcutClass {
     this.renderer.setProperty(
       this.shortcutSpan,
       'innerText',
-      `[  ${this.shortcutKey.toUpperCase()}  ] `
+      `(${this.shortcutKey.toUpperCase()})`
     );
     this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
     this.insertShortcutIntoHeader();

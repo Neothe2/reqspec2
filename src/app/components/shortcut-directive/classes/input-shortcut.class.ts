@@ -68,27 +68,12 @@ export class InputShortcut implements ShortcutClass {
       this.renderer.appendChild(labelElem, this.shortcutSpan);
       this.renderer.appendChild(labelElem, this.renderer.createText(after));
     } else {
-      //   // Add a hidden label before the input if the shortcut letter doesn't exist in the label text
-      //   this.shortcutSpan = this.renderer.createElement('span');
-      //   this.renderer.setProperty(
-      //     this.shortcutSpan,
-      //     'innerText',
-      //     `[  ${this.shortcutKey.toUpperCase()}  ] `
-      //   );
-      //   this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
-      //   this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-      //   this.renderer.insertBefore(
-      //     this.el.nativeElement.parentNode,
-      //     this.shortcutSpan,
-      //     this.el.nativeElement
-      //   );
-      // If the shortcut letter exists in the label text, underline it
       const after = labelText;
       this.shortcutSpan = this.renderer.createElement('span');
       this.renderer.setProperty(
         this.shortcutSpan,
         'innerText',
-        `[  ${this.shortcutKey.toUpperCase()}  ] `
+        `( ${this.shortcutKey.toUpperCase()} ) `
       );
       this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
       this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');

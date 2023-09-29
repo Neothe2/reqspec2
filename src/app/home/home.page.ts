@@ -34,4 +34,8 @@ export class HomePage {
     let text = (document.getElementById('input') as HTMLInputElement).value;
     console.log(text);
   }
+  balls() {
+    let text = (document.getElementById('input2') as HTMLInputElement).value;
+    console.log(text);
+  }
 }

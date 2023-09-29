@@ -41,18 +41,21 @@
 // }
 
 .ctrl-shortcut-button.active {
-  text-decoration: underline;
+  // text-decoration: underline;
   color: rgb(158, 231, 255);
+  font-weight: bolder;
 }
 
 .alt-shortcut-button.active {
-  text-decoration: underline;
-  color: rgb(122, 255, 182);
+  // text-decoration: underline;
+  color: rgb(255, 0, 0);
+  font-weight: bolder;
 }
 
 .ctrl-alt-shortcut-button.active {
-  text-decoration: underline;
-  color: rgb(239, 82, 82);
+  // text-decoration: underline;
+  color: rgb(4, 255, 0);
+  font-weight: bolder;
 }
 
 .hidden-shortcut {
