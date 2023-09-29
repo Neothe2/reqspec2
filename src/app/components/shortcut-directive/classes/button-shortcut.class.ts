@@ -37,7 +37,8 @@ export class ButtonShortcut implements ShortcutClass {
 
   createSubscription() {
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
-      if (keyInfo.toLowerCase() == this.getShortcutString()) {
+      let shortcutString = this.getShortcutString();
+      if (keyInfo.toLowerCase() == shortcutString.toLowerCase()) {
         this.el.nativeElement.click();
       }
     });
@@ -75,18 +76,15 @@ export class ButtonShortcut implements ShortcutClass {
     this.renderer.setProperty(
       this.shortcutSpan,
       'innerText',
-      `[  ${this.shortcutKey.toUpperCase()}  ] `
+      `(${this.shortcutKey.toUpperCase()})`
     );
     this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
+    this.renderer.setStyle(this.shortcutSpan, 'padding-left', '5px');
     this.insertShortcutIntoHeader();
   }
 
   insertShortcutIntoHeader() {
-    this.renderer.insertBefore(
-      this.el.nativeElement,
-      this.shortcutSpan,
-      this.el.nativeElement.firstChild
-    );
+    this.renderer.appendChild(this.el.nativeElement, this.shortcutSpan);
   }
 
   getShortcut() {

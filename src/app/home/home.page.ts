@@ -34,4 +34,16 @@ export class HomePage {
     let text = (document.getElementById('input') as HTMLInputElement).value;
     console.log(text);
   }
+  hello2() {
+    let text = (document.getElementById('input2') as HTMLInputElement).value;
+    console.log(text);
+  }
+  hello3() {
+    let text = (document.getElementById('input3') as HTMLInputElement).value;
+    console.log(text);
+  }
+  hello4() {
+    let text = (document.getElementById('input4') as HTMLInputElement).value;
+    console.log(text);
+  }
 }
