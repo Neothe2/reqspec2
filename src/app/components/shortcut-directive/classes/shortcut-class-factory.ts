@@ -12,9 +12,15 @@ import {
 } from '@angular/core';
 import { InputShortcut } from './input-shortcut.class';
 import { ListShortcut } from './list-shortcut.class';
+import { AccordionShortcut } from './accordion-shortcut.class';
 
 export class ShortcutClassFactory {
-  private shortcutClasses = [ButtonShortcut, InputShortcut, ListShortcut];
+  private shortcutClasses = [
+    ButtonShortcut,
+    InputShortcut,
+    ListShortcut,
+    AccordionShortcut,
+  ];
   constructor() {}
 
   public createShortcutClass(

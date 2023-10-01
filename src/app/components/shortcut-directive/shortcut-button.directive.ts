@@ -65,80 +65,81 @@ export class ShortcutButtonDirective implements AfterViewInit {
     //     }
     //   );
     // }
-    if (tagName === 'ion-accordion') {
-      // Logic for ion-accordion
-      let accordionHeader = this.el.nativeElement.querySelector('ion-item');
-      this.addShortcutToAccordionHeader(accordionHeader);
-      const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-      this.buttonText = this.el.nativeElement.innerText;
-      this.shortcutKey = (
-        shortcut?.replace(/[()\[\]{}]/g, '') || ''
-      ).toLowerCase();
-    } else {
-      let shortcutFactory = new ShortcutClassFactory();
-      let shortcutClass = shortcutFactory.createShortcutClass(
-        tagName,
-        this.el,
-        this.renderer,
-        this.shortcutService
-      );
-      if (shortcutClass) {
-        this.shortcutClass = shortcutClass;
-        this.shortcutClass.afterViewInit();
-      }
-
-      // const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-      // this.buttonText = this.el.nativeElement.innerText;
-      // this.shortcutKey = (
-      //   shortcut?.replace(/[()\[\]{}]/g, '') || ''
-      // ).toLowerCase();
-
-      // if (this.buttonText.toLowerCase().includes(this.shortcutKey)) {
-      //   const index = this.buttonText.toLowerCase().indexOf(this.shortcutKey);
-      //   const before = this.buttonText.substring(0, index);
-      //   const after = this.buttonText.substring(index + 1);
-      //   this.shortcutSpan = this.renderer.createElement('span');
-
-      //   this.renderer.setProperty(
-      //     this.shortcutSpan,
-      //     'innerText',
-      //     this.buttonText[index]
-      //   );
-      //   this.renderer.addClass(
-      //     this.shortcutSpan,
-      //     this.getShortcutClass(shortcut || '')
-      //   );
-
-      //   this.renderer.setProperty(this.el.nativeElement, 'innerHTML', '');
-      //   this.renderer.appendChild(
-      //     this.el.nativeElement,
-      //     this.renderer.createText(before)
-      //   );
-      //   this.renderer.appendChild(this.el.nativeElement, this.shortcutSpan);
-      //   this.renderer.appendChild(
-      //     this.el.nativeElement,
-      //     this.renderer.createText(after)
-      //   );
-      // } else {
-      //   // If the shortcut letter doesn't exist in the button text
-      //   this.shortcutSpan = this.renderer.createElement('span');
-      //   this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-      //   this.renderer.setProperty(
-      //     this.shortcutSpan,
-      //     'innerText',
-      //     `[  ${this.shortcutKey.toUpperCase()}  ] `
-      //   );
-      //   this.renderer.addClass(
-      //     this.shortcutSpan,
-      //     this.getShortcutClass(shortcut || '')
-      //   );
-      //   this.renderer.insertBefore(
-      //     this.el.nativeElement,
-      //     this.shortcutSpan,
-      //     this.el.nativeElement.firstChild
-      //   );
-      // }
+    // if (tagName === 'ion-accordion') {
+    //   // Logic for ion-accordion
+    //   let accordionHeader = this.el.nativeElement.querySelector('ion-item');
+    //   this.addShortcutToAccordionHeader(accordionHeader);
+    //   const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    //   this.buttonText = this.el.nativeElement.innerText;
+    //   this.shortcutKey = (
+    //     shortcut?.replace(/[()\[\]{}]/g, '') || ''
+    //   ).toLowerCase();
+    // }
+    // else {
+    let shortcutFactory = new ShortcutClassFactory();
+    let shortcutClass = shortcutFactory.createShortcutClass(
+      tagName,
+      this.el,
+      this.renderer,
+      this.shortcutService
+    );
+    if (shortcutClass) {
+      this.shortcutClass = shortcutClass;
+      this.shortcutClass.afterViewInit();
     }
+
+    // const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    // this.buttonText = this.el.nativeElement.innerText;
+    // this.shortcutKey = (
+    //   shortcut?.replace(/[()\[\]{}]/g, '') || ''
+    // ).toLowerCase();
+
+    // if (this.buttonText.toLowerCase().includes(this.shortcutKey)) {
+    //   const index = this.buttonText.toLowerCase().indexOf(this.shortcutKey);
+    //   const before = this.buttonText.substring(0, index);
+    //   const after = this.buttonText.substring(index + 1);
+    //   this.shortcutSpan = this.renderer.createElement('span');
+
+    //   this.renderer.setProperty(
+    //     this.shortcutSpan,
+    //     'innerText',
+    //     this.buttonText[index]
+    //   );
+    //   this.renderer.addClass(
+    //     this.shortcutSpan,
+    //     this.getShortcutClass(shortcut || '')
+    //   );
+
+    //   this.renderer.setProperty(this.el.nativeElement, 'innerHTML', '');
+    //   this.renderer.appendChild(
+    //     this.el.nativeElement,
+    //     this.renderer.createText(before)
+    //   );
+    //   this.renderer.appendChild(this.el.nativeElement, this.shortcutSpan);
+    //   this.renderer.appendChild(
+    //     this.el.nativeElement,
+    //     this.renderer.createText(after)
+    //   );
+    // } else {
+    //   // If the shortcut letter doesn't exist in the button text
+    //   this.shortcutSpan = this.renderer.createElement('span');
+    //   this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+    //   this.renderer.setProperty(
+    //     this.shortcutSpan,
+    //     'innerText',
+    //     `[  ${this.shortcutKey.toUpperCase()}  ] `
+    //   );
+    //   this.renderer.addClass(
+    //     this.shortcutSpan,
+    //     this.getShortcutClass(shortcut || '')
+    //   );
+    //   this.renderer.insertBefore(
+    //     this.el.nativeElement,
+    //     this.shortcutSpan,
+    //     this.el.nativeElement.firstChild
+    //   );
+    // }
+
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
       const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
       let shortcutString = this.getShortcutString(shortcut.toLowerCase());
@@ -148,9 +149,9 @@ export class ShortcutButtonDirective implements AfterViewInit {
         // if (tagName == 'ion-button' || tagName == 'button') {
         //   this.el.nativeElement.click();
         // }
-        if (tagName == 'ion-accordion') {
-          this.toggleAccordion();
-        }
+        // if (tagName == 'ion-accordion') {
+        //   this.toggleAccordion();
+        // }
       }
     });
   }
@@ -242,18 +243,19 @@ export class ShortcutButtonDirective implements AfterViewInit {
     //     }
     //   }
     // }
-    if (tagName === 'ion-accordion') {
-      if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        // Add any additional logic here if needed
-      }
-      if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        // Add any additional logic here if needed
-      }
-    } else {
-      this.shortcutClass.handleKeyDown(event);
-    }
+    // if (tagName === 'ion-accordion') {
+    //   if (event.key === 'ArrowDown') {
+    //     event.preventDefault();
+    //     // Add any additional logic here if needed
+    //   }
+    //   if (event.key === 'ArrowUp') {
+    //     event.preventDefault();
+    //     // Add any additional logic here if needed
+    //   }
+    // }
+    // else {
+    this.shortcutClass.handleKeyDown(event);
+    // }
   }
 
   private addShortcutToAccordionHeader(accordionHeader: HTMLElement): void {
@@ -276,7 +278,8 @@ export class ShortcutButtonDirective implements AfterViewInit {
       !(
         tagName == 'ion-button' ||
         tagName == 'ion-item' ||
-        tagName == 'ion-card'
+        tagName == 'ion-card' ||
+        tagName == 'ion-accordion'
       )
     ) {
       if (this.shortcutSpan) {

@@ -11,6 +11,7 @@ export class AccordionShortcut implements ShortcutClass {
   shortcutSpan: any;
   shortcut: string = '';
   subscription: any;
+  labelElement: any;
 
   constructor(
     el: ElementRef,
@@ -28,11 +29,10 @@ export class AccordionShortcut implements ShortcutClass {
   }
 
   addShortcutToHeader(): void {
-    const labelElement = this.el.nativeElement.querySelector('ion-label');
     if (this.labelText.toLowerCase().includes(this.shortcutKey.toLowerCase())) {
-      this.addShortcutToHeaderIfKeyIsPresent(labelElement);
+      this.addShortcutToHeaderIfKeyIsPresent(this.labelElement);
     } else {
-      this.addShortcutToHeaderIfKeyIsNotPresent(labelElement);
+      this.addShortcutToHeaderIfKeyIsNotPresent(this.labelElement);
     }
   }
 
@@ -71,16 +71,29 @@ export class AccordionShortcut implements ShortcutClass {
   createSubscription() {
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
       if (keyInfo.toLowerCase() === this.getShortcutString().toLowerCase()) {
-        const button = this.el.nativeElement.querySelector('button');
-        button.click();
+        this.toggleAccordion();
       }
     });
   }
 
+  toggleAccordion(): void {
+    const accordionDetail = this.el.nativeElement;
+
+    if (accordionDetail) {
+      if (accordionDetail.classList.contains('accordion-expanded')) {
+        this.renderer.removeClass(accordionDetail, 'accordion-expanded');
+        this.renderer.addClass(accordionDetail, 'accordion-collapsed');
+      } else {
+        this.renderer.removeClass(accordionDetail, 'accordion-collapsed');
+        this.renderer.addClass(accordionDetail, 'accordion-expanded');
+      }
+    }
+  }
+
   getShortcut(): void {
     this.shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-    const labelElement = this.el.nativeElement.querySelector('ion-label');
-    this.labelText = labelElement ? labelElement.innerText : '';
+    this.labelElement = this.el.nativeElement.querySelector('ion-item');
+    this.labelText = this.labelElement ? this.labelElement.innerText : '';
     this.shortcutKey = (
       this.shortcut?.replace(/[()\[\]{}]/g, '') || ''
     ).toLowerCase();
