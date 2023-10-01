@@ -74,3 +74,7 @@ ion-item:focus {
   padding: 0 !important;
   /* Add any other properties that you want to reset */
 }
+
+.selected {
+  border: 1px solid black;
+}

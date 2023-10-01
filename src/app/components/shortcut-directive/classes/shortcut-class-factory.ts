@@ -11,14 +11,14 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { InputShortcut } from './input-shortcut.class';
-import { ListShortcut } from './list-shortcut.class';
+import { ListCardShortcut } from './list-shortcut.class';
 import { AccordionShortcut } from './accordion-shortcut.class';
 
 export class ShortcutClassFactory {
   private shortcutClasses = [
     ButtonShortcut,
     InputShortcut,
-    ListShortcut,
+    ListCardShortcut,
     AccordionShortcut,
   ];
   constructor() {}

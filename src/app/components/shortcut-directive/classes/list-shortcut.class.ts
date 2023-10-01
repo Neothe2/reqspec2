@@ -2,20 +2,17 @@ import { ElementRef, Renderer2 } from '@angular/core';
 import { ShortcutClass } from '../interface/shortcutClass.interface';
 import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
-export class ListShortcut implements ShortcutClass {
+export class ListCardShortcut implements ShortcutClass {
   private el: ElementRef;
   private renderer: Renderer2;
-  static readonly tagName: string = 'ion-card';
-  private shortcut: any;
-  private shortcutKey: any;
-  private shortcutSpan: any;
-  private subscription: any;
-  private keyInLabel: boolean = false;
-  private cardHeader: any;
-  private cardListItems: any;
-  private focusedElementIndex: number = -1;
-  buttonText: any;
-  cardTitleText: any;
+  shortcut: string = '';
+  selectedIdx: number = 0;
+  static tagName = 'ion-card';
+  ionItems!: NodeListOf<HTMLElement>;
+  subscription: any;
+  shortcutSpan: any;
+  shortcutKey: any;
+  keyInLabel: boolean = false;
 
   constructor(
     el: ElementRef,
@@ -25,124 +22,61 @@ export class ListShortcut implements ShortcutClass {
     this.el = el;
     this.renderer = renderer;
   }
-
-  afterViewInit(): void {
-    // Logic for ion-card
-    this.cardHeader = this.el.nativeElement.querySelector('ion-card-header');
-    this.cardListItems = this.el.nativeElement.querySelectorAll('ion-item');
-    this.addShortcutToHeader();
-    this.createSubscription();
-
-    // Subscribe to the shortcut observable
+  handleKeyUp(event: KeyboardEvent): void {
+    this.renderer.removeClass(this.shortcutSpan, 'active');
+    if (!this.keyInLabel) {
+      this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+    }
   }
 
-  createSubscription(): void {
+  afterViewInit(): void {
+    this.shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
+    this.shortcutKey = (
+      this.shortcut?.replace(/[()\[\]{}]/g, '') || ''
+    ).toLowerCase();
+    this.addShortcutToHeader();
+    this.ionItems = this.el.nativeElement.querySelectorAll('ion-item');
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
-      this.shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-      let shortcutString = this.getShortcutString();
-      if (keyInfo.toLowerCase() === shortcutString.toLowerCase()) {
-        this.focusedElementIndex = Math.min(
-          this.cardListItems!.length - 1,
-          this.focusedElementIndex + 1
-        );
-        this.focusOnElement();
-
-        // Manually trigger the focus and blur events to get the desired visual effect
-        // this.listItems![this.focusedElementIndex].blur();
-        // this.listItems![this.focusedElementIndex].focus();
+      if (keyInfo.toLowerCase() === this.getShortcutString().toLowerCase()) {
+        this.selectFirstItem();
       }
     });
   }
-  focusOnElement() {
-    if (this.focusedElementIndex >= 0 && this.cardListItems) {
-      this.cardListItems.forEach((item: any, index: any) => {
-        if (index === this.focusedElementIndex) {
-          this.renderer.addClass(item, 'focused');
-          this.renderer.setAttribute(item, 'tabindex', '0');
-          item.blur();
-          setTimeout(() => {
-            item.focus();
-            // item.blur();
-            // setTimeout(() => {
-            //   item.focus();
-            // }, 0);
-          }, 0);
-        } else {
-          this.renderer.removeClass(item, 'focused');
-          this.renderer.removeAttribute(item, 'tabindex');
+
+  handleKeyDown(event: KeyboardEvent): void {
+    const shortcutClass = this.getShortcutClass();
+    this.ionItems = this.el.nativeElement.querySelectorAll('ion-item');
+
+    if (this.shortcutSpan) {
+      if (
+        (shortcutClass === 'ctrl-shortcut-button' && event.ctrlKey) ||
+        (shortcutClass === 'alt-shortcut-button' && event.altKey) ||
+        (shortcutClass === 'ctrl-alt-shortcut-button' &&
+          event.ctrlKey &&
+          event.altKey)
+      ) {
+        event.preventDefault();
+        this.renderer.addClass(this.shortcutSpan, 'active');
+        if (!this.keyInLabel) {
+          this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
         }
-      });
+      }
     }
-  }
-
-  addShortcutToHeader(): void {
-    const shortcut = this.el.nativeElement.getAttribute('keyboard-shortcut');
-    this.shortcut = shortcut;
-    const shortcutKey = (
-      shortcut?.replace(/[()\[\]{}]/g, '') || ''
-    ).toUpperCase();
-    this.shortcutKey = shortcutKey.toUpperCase();
-
-    // Get the existing title from ion-card-header
-    const cardTitleElem = this.cardHeader.querySelector('ion-card-title'); // adjust your selector as needed
-    this.cardTitleText = cardTitleElem ? cardTitleElem.innerText : '';
-
-    // Check if the shortcut key is present in the card title text
-    if (
-      this.cardTitleText.toLowerCase().includes(this.shortcutKey.toLowerCase())
-    ) {
-      this.keyInLabel = true;
-      const index = this.cardTitleText
-        .toLowerCase()
-        .indexOf(this.shortcutKey.toLowerCase());
-      const beforeText = this.cardTitleText.substring(0, index);
-      const afterText = this.cardTitleText.substring(index + 1);
-      this.shortcutSpan = this.renderer.createElement('span');
-
-      this.renderer.setProperty(
-        this.shortcutSpan,
-        'innerText',
-        this.cardTitleText[index]
-      );
-
-      // Add a specific class for styling
-      this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
-
-      // Clear the existing title and append the modified one
-      this.renderer.setProperty(cardTitleElem, 'innerHTML', '');
-      this.renderer.appendChild(
-        cardTitleElem,
-        this.renderer.createText(beforeText)
-      );
-      this.renderer.appendChild(cardTitleElem, this.shortcutSpan);
-      this.renderer.appendChild(
-        cardTitleElem,
-        this.renderer.createText(afterText)
-      );
-    } else {
-      // Fallback behavior: Add a span containing the shortcut key
-      this.shortcutSpan = this.renderer.createElement('span');
-      this.renderer.setProperty(
-        this.shortcutSpan,
-        'innerText',
-        `[${shortcutKey}]`
-      );
-      this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-      this.renderer.appendChild(this.cardHeader, this.shortcutSpan);
+    if (event.key === 'ArrowUp') {
+      this.selectPreviousItem();
+    } else if (event.key === 'ArrowDown') {
+      this.selectNextItem();
+    } else if (event.key === 'ArrowRight') {
+      this.clickSelectedItemButton();
+    } else if (event.key === 'Enter') {
+      this.clickSelectedItem();
     }
-  }
-
-  getShortcut(): void {
-    // Implementation
   }
 
   getShortcutClass(): string {
-    if (this.shortcut) {
-      if (this.shortcut.startsWith('(')) return 'ctrl-shortcut-button';
-      if (this.shortcut.startsWith('[')) return 'alt-shortcut-button';
-      if (this.shortcut.startsWith('{')) return 'ctrl-alt-shortcut-button';
-    }
-
+    if (this.shortcut.startsWith('(')) return 'ctrl-shortcut-button';
+    if (this.shortcut.startsWith('[')) return 'alt-shortcut-button';
+    if (this.shortcut.startsWith('{')) return 'ctrl-alt-shortcut-button';
     return '';
   }
 
@@ -156,112 +90,104 @@ export class ListShortcut implements ShortcutClass {
     return '';
   }
 
-  handleKeyDown(event: KeyboardEvent): void {
-    // Logic for list items
+  selectFirstItem(): void {
+    this.selectedIdx = 0;
+    this.ionItems = this.el.nativeElement.querySelectorAll('ion-item');
+    this.highlightSelectedItem();
+  }
 
-    let actionSheet = document.querySelector('ion-action-sheet');
-    let actionSheetOpen = actionSheet ? true : false;
+  selectNextItem(): void {
+    if (this.selectedIdx < this.ionItems.length - 1) {
+      this.selectedIdx++;
+      this.highlightSelectedItem();
+    }
+  }
 
-    this.cardListItems = this.el.nativeElement.querySelectorAll('ion-item');
+  selectPreviousItem(): void {
+    if (this.selectedIdx > 0) {
+      this.selectedIdx--;
+      this.highlightSelectedItem();
+    }
+  }
 
-    if (event.key === 'ArrowUp') {
-      if (!actionSheetOpen) {
-        event.preventDefault();
-        this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
-        this.focusOnElement();
-      }
-    } else if (event.key === 'ArrowDown') {
-      if (!actionSheetOpen) {
-        event.preventDefault();
-
-        this.focusedElementIndex = Math.min(
-          this.cardListItems!.length - 1,
-          this.focusedElementIndex + 1
-        );
-        this.focusOnElement();
-      }
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-
-      // Get the focused element within the ion-item
-      const focusedButton =
-        this.cardListItems![this.focusedElementIndex].querySelector(
-          'ion-button'
-        );
-
-      // Check if the focused element is the same as the element at the selected index
-      if (document.activeElement === focusedButton) {
-        this.cardListItems![this.focusedElementIndex].click();
-      }
-    } else if (event.key === 'Tab' && event.shiftKey) {
-      if (
-        !actionSheetOpen &&
-        this.isFocusedElementInList() &&
-        !(this.focusedElementIndex == 0)
-      ) {
-        this.focusedElementIndex = Math.max(0, this.focusedElementIndex - 1);
-        this.focusOnElement();
-      }
-    } else if (
-      event.key === 'Tab' &&
-      !event.shiftKey &&
-      !(this.focusedElementIndex == this.cardListItems!.length - 1)
-    ) {
-      if (!actionSheetOpen && this.isFocusedElementInList()) {
-        this.focusedElementIndex = Math.min(
-          this.cardListItems!.length - 1,
-          this.focusedElementIndex + 1
-        );
-        this.focusOnElement();
-      }
-    } else if (event.key === 'Alt' || event.key === 'Control') {
-      if (!this.keyInLabel) {
-        this.toggleShortcutVisibility(true);
+  highlightSelectedItem(): void {
+    this.ionItems.forEach((item, index) => {
+      if (index === this.selectedIdx) {
+        this.renderer.addClass(item, 'selected');
       } else {
-        this.renderer.addClass(this.shortcutSpan, 'active');
+        this.renderer.removeClass(item, 'selected');
       }
-    }
-  }
-  isFocusedElementInList(): boolean {
-    const focusedElement = document.activeElement as HTMLElement;
-    if (this.cardListItems && focusedElement) {
-      let cardListItems = Array.from(this.cardListItems);
-      for (let listItem of cardListItems) {
-        if (
-          (listItem as any)
-            .querySelector('ion-buttons')
-            ?.querySelector('ion-button') == focusedElement
-        ) {
-          return true;
-        }
-      }
-    }
-    return false;
+    });
   }
 
-  handleKeyUp(event: KeyboardEvent): void {
-    if (this.shortcutSpan) {
-      event.preventDefault();
-      this.renderer.removeClass(this.shortcutSpan, 'active');
-      if (
-        !this.cardTitleText
-          .toLowerCase()
-          .includes(this.shortcutKey.toLowerCase())
-      ) {
-        this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-      }
+  clickSelectedItem(): void {
+    this.ionItems[this.selectedIdx]?.click();
+  }
+
+  clickSelectedItemButton(): void {
+    const button = this.ionItems[this.selectedIdx]?.querySelector('ion-button');
+    if (button) {
+      button.click();
     }
   }
 
-  toggleShortcutVisibility(show: boolean): void {
-    if (show) {
-      this.renderer.removeClass(this.shortcutSpan, 'hidden-shortcut');
-    } else {
-      this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
-    }
-  }
+  //   addShortcutToHeader(): void {
+  //     const cardHeader = this.el.nativeElement.querySelector('ion-card-header');
+  //     const shortcutSpan = this.renderer.createElement('span');
+  //     const shortcutString = `[${this.getShortcutString()}]`;
+  //     this.renderer.setProperty(shortcutSpan, 'innerText', shortcutString);
+  //     this.renderer.addClass(shortcutSpan, this.getShortcutClass());
+  //     this.renderer.appendChild(cardHeader, shortcutSpan);
+  //   }
 
   onDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  addShortcutToHeader(): void {
+    // Since the native element is ion-card, we directly look for ion-card-title inside ion-card-header
+    const cardTitleElem = this.el.nativeElement.querySelector(
+      'ion-card-header ion-card-title'
+    );
+
+    let titleText = cardTitleElem ? cardTitleElem.innerText : '';
+
+    if (titleText.toLowerCase().includes(this.shortcutKey)) {
+      this.keyInLabel = true;
+      const index = titleText.toLowerCase().indexOf(this.shortcutKey);
+      const before = titleText.substring(0, index);
+      const after = titleText.substring(index + 1);
+
+      this.shortcutSpan = this.renderer.createElement('span');
+      this.renderer.setProperty(
+        this.shortcutSpan,
+        'innerText',
+        titleText[index]
+      );
+      this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
+
+      this.renderer.setProperty(cardTitleElem, 'innerHTML', '');
+      this.renderer.appendChild(
+        cardTitleElem,
+        this.renderer.createText(before)
+      );
+      this.renderer.appendChild(cardTitleElem, this.shortcutSpan);
+      this.renderer.appendChild(cardTitleElem, this.renderer.createText(after));
+    } else {
+      const after = titleText;
+      this.shortcutSpan = this.renderer.createElement('span');
+      this.renderer.setProperty(
+        this.shortcutSpan,
+        'innerText',
+        `(${this.shortcutKey.toUpperCase()})`
+      );
+      this.renderer.addClass(this.shortcutSpan, this.getShortcutClass());
+      this.renderer.addClass(this.shortcutSpan, 'hidden-shortcut');
+
+      this.renderer.setProperty(cardTitleElem, 'innerHTML', '');
+      this.renderer.setStyle(this.shortcutSpan, 'padding-left', '5px');
+      this.renderer.appendChild(cardTitleElem, this.renderer.createText(after));
+      this.renderer.appendChild(cardTitleElem, this.shortcutSpan);
+    }
   }
 }
