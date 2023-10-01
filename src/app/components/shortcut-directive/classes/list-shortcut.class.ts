@@ -38,9 +38,25 @@ export class ListCardShortcut implements ShortcutClass {
     this.ionItems = this.el.nativeElement.querySelectorAll('ion-item');
     this.subscription = this.shortcutService.shortcut$.subscribe((keyInfo) => {
       if (keyInfo.toLowerCase() === this.getShortcutString().toLowerCase()) {
+        this.focusThisCard();
         this.selectFirstItem();
       }
     });
+  }
+
+  focusThisCard(): void {
+    // Remove focus from all cards
+    const allCards = document.querySelectorAll('ion-card');
+    allCards.forEach((card) => {
+      this.renderer.removeClass(card, 'focused-card');
+    });
+
+    // Add focus to this card
+    this.renderer.addClass(this.el.nativeElement, 'focused-card');
+  }
+
+  isThisCardFocused(): boolean {
+    return this.el.nativeElement.classList.contains('focused-card');
   }
 
   handleKeyDown(event: KeyboardEvent): void {
@@ -62,14 +78,16 @@ export class ListCardShortcut implements ShortcutClass {
         }
       }
     }
-    if (event.key === 'ArrowUp') {
-      this.selectPreviousItem();
-    } else if (event.key === 'ArrowDown') {
-      this.selectNextItem();
-    } else if (event.key === 'ArrowRight') {
-      this.clickSelectedItemButton();
-    } else if (event.key === 'Enter') {
-      this.clickSelectedItem();
+    if (this.isThisCardFocused()) {
+      if (event.key === 'ArrowUp') {
+        this.selectPreviousItem();
+      } else if (event.key === 'ArrowDown') {
+        this.selectNextItem();
+      } else if (event.key === 'ArrowRight') {
+        this.clickSelectedItemButton();
+      } else if (event.key === 'Enter') {
+        this.clickSelectedItem();
+      }
     }
   }
 
