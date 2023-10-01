@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-title>New User Story</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">Close</ion-button>
+      <ion-button (click)="dismissModal()" keyboard-shortcut="[w]"
+        >Close</ion-button
+      >
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -35,7 +37,11 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-button type="submit" expand="block" (click)="submit()"
+  <ion-button
+    type="submit"
+    expand="block"
+    (click)="submit()"
+    keyboard-shortcut="[i]"
     >Confirm</ion-button
   >
 </ion-content>

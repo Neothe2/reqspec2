@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavParams } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-add-edit-staff-modal',
@@ -22,7 +23,8 @@ export class AddEditStaffModalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private navParams: NavParams,
     private http: HttpService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private shortcut: ShortcutService
   ) {}
 
   ngOnInit() {

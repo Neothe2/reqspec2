@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-title>Actor</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">Close</ion-button>
+      <ion-button (click)="dismissModal()" keyboard-shortcut="[d]"
+        >Close</ion-button
+      >
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,11 +12,13 @@
 <ion-content>
   <ion-list>
     <form [formGroup]="actorForm" (ngSubmit)="onSubmit()">
-      <ion-item>
+      <ion-item keyboard-shortcut="[r]">
         <ion-label position="floating">Actor Role</ion-label>
         <ion-input formControlName="role" type="text"></ion-input>
       </ion-item>
-      <ion-button type="submit" expand="block">Confirm</ion-button>
+      <ion-button type="submit" expand="block" keyboard-shortcut="[o]"
+        >Confirm</ion-button
+      >
     </form>
   </ion-list>
 </ion-content>

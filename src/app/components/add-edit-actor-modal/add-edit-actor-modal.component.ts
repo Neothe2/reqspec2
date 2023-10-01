@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController, NavParams } from '@ionic/angular';
+import { ShortcutService } from 'src/app/services/shortcut/shortcut.service';
 
 @Component({
   selector: 'app-add-edit-actor-modal',
@@ -13,7 +14,8 @@ export class AddEditActorModalComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private shortcut: ShortcutService
   ) {
     this.actorForm = this.formBuilder.group({
       role: ['', Validators.required],

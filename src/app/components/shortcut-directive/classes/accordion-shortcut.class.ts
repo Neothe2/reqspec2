@@ -80,12 +80,29 @@ export class AccordionShortcut implements ShortcutClass {
     const accordionDetail = this.el.nativeElement;
 
     if (accordionDetail) {
+      // Toggle current accordion
       if (accordionDetail.classList.contains('accordion-expanded')) {
         this.renderer.removeClass(accordionDetail, 'accordion-expanded');
         this.renderer.addClass(accordionDetail, 'accordion-collapsed');
       } else {
         this.renderer.removeClass(accordionDetail, 'accordion-collapsed');
         this.renderer.addClass(accordionDetail, 'accordion-expanded');
+      }
+
+      // Find the parent accordion group
+      const accordionGroup = accordionDetail.closest('ion-accordion-group');
+
+      // Loop through all child accordions and close them except the current one
+      if (accordionGroup) {
+        const siblingAccordions =
+          accordionGroup.querySelectorAll('ion-accordion');
+
+        siblingAccordions.forEach((siblingAccordion: Element) => {
+          if (siblingAccordion !== accordionDetail) {
+            this.renderer.removeClass(siblingAccordion, 'accordion-expanded');
+            this.renderer.addClass(siblingAccordion, 'accordion-collapsed');
+          }
+        });
       }
     }
   }

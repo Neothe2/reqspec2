@@ -38,6 +38,7 @@
                 class="add-actor-button"
                 fill="clear"
                 color="dark"
+                keyboard-shortcut="[n]"
               >
                 <ion-icon name="add" slot="icon-only"></ion-icon>
               </ion-button>
@@ -74,6 +75,7 @@
                 class="add-actor-button"
                 fill="clear"
                 color="dark"
+                keyboard-shortcut="[b]"
               >
                 <ion-icon name="add" slot="icon-only"></ion-icon>
               </ion-button>
@@ -102,14 +104,15 @@
               </ion-card-content>
             </ion-card>
           </ion-accordion>
-          <ion-accordion>
+          <ion-accordion keyboard-shortcut="[u]">
             <ion-item slot="header" color="light">User Stories</ion-item>
-            <ion-card slot="content">
+            <ion-card slot="content" keyboard-shortcut="[e]">
               <ion-button
                 (click)="onAddUserStory()"
                 class="add-actor-button"
                 fill="clear"
                 color="dark"
+                keyboard-shortcut="[l]"
               >
                 <ion-icon name="add" slot="icon-only"></ion-icon>
               </ion-button>

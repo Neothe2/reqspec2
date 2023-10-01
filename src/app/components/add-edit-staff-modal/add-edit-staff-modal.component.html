@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-title>Staff</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">Close</ion-button>
+      <ion-button (click)="dismissModal()" keyboard-shortcut="[k]"
+        >Close</ion-button
+      >
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -14,12 +16,14 @@
         <ion-label position="floating">Staff Name</ion-label>
         <ion-input formControlName="name" type="text"></ion-input>
       </ion-item> -->
-      <ion-item>
+      <ion-item keyboard-shortcut="[x]">
         <ion-label position="floating">Staff Name</ion-label>
         <ion-input formControlName="name" type="text"></ion-input>
       </ion-item>
 
-      <ion-button type="submit" expand="block">Confirm</ion-button>
+      <ion-button type="submit" expand="block" keyboard-shortcut="[f]"
+        >Confirm</ion-button
+      >
     </form>
   </ion-list>
 </ion-content>
